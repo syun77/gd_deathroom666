@@ -1,0 +1,112 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Wall.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Main.gd" type="Script" id=4]
+
+[node name="Main" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 128, 512 )
+
+[node name="WallLayer" type="CanvasLayer" parent="."]
+
+[node name="Wall" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 832 )
+
+[node name="Wall2" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 72, 832 )
+
+[node name="Wall3" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 120, 832 )
+
+[node name="Wall4" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 168, 832 )
+
+[node name="Wall5" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 216, 832 )
+
+[node name="Wall6" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 264, 832 )
+
+[node name="Wall7" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 312, 832 )
+
+[node name="Wall8" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 360, 832 )
+
+[node name="Wall9" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 408, 832 )
+
+[node name="Wall10" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 832 )
+
+[node name="Wall11" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 784 )
+
+[node name="Wall12" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 736 )
+
+[node name="Wall13" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 688 )
+
+[node name="Wall14" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 640 )
+
+[node name="Wall15" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 592 )
+
+[node name="Wall16" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 544 )
+
+[node name="Wall17" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 496 )
+
+[node name="Wall18" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 448 )
+
+[node name="Wall19" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 400 )
+
+[node name="Wall20" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 352 )
+
+[node name="Wall21" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 304 )
+
+[node name="Wall22" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 784 )
+
+[node name="Wall23" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 736 )
+
+[node name="Wall24" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 688 )
+
+[node name="Wall25" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 640 )
+
+[node name="Wall26" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 592 )
+
+[node name="Wall27" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 544 )
+
+[node name="Wall28" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 496 )
+
+[node name="Wall29" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 448 )
+
+[node name="Wall30" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 400 )
+
+[node name="Wall31" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 352 )
+
+[node name="Wall32" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 304 )
+
+[node name="Wall33" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 256 )
