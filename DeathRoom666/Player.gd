@@ -1,11 +1,11 @@
 extends KinematicBody2D
 
+const ANIM_SPEED = 7 # アニメーション速度
 const MOVE_SPEED = 30
 const DECAY_MOVE_SPEED = 0.9 
 const GRAVITY = 40
 const JUMP_POWER = 800
-const LIMIT_LEFT = 64.0
-const LIMIT_RIGHT = 480.0 - 64.0
+const MAX_JUMP_CNT = 2 # 2段ジャンプまで可能.
 
 onready var _spr = $Player
 
@@ -14,6 +14,7 @@ var _velocity = Vector2.ZERO # 速度ベクトル.
 var _is_jumping = false # ジャンプ中かどうか
 var _is_directon_left = false # 左向きかどうか.
 var _tAnim:float = 0 # アニメーションタイマー.
+var _cnt_jump = 0 # ジャンプ回数.
 
 func _physics_process(delta: float) -> void:
 	# 重力を加算
@@ -28,20 +29,15 @@ func _physics_process(delta: float) -> void:
 	elif Input.is_action_pressed("ui_right"):
 		_velocity.x += MOVE_SPEED # 右方向に移動.
 	
-	# ジャンプ.
-	if _is_jumping == false:
-		# ジャンプ中でなければジャンプできる.
-		if Input.is_action_just_pressed("act_jump"):
-			# ジャンプする.
-			_velocity.y = -JUMP_POWER
-	
 	# 移動処理.
 	# ※第2引数に床と判定する方向ベクトルを渡す必要がある
 	_velocity = move_and_slide(_velocity, Vector2.UP)
 	
 	if is_on_floor():
 		_is_jumping = false # 床に着地している
-		
+		_velocity.y = 0 # 重力クリア.	
+		_cnt_jump = 0 # ジャンプ回数をリセットする.
+			
 		# 衝突対象を取得する.
 		for i in range(get_slide_count()):
 			var col = get_slide_collision(i)
@@ -51,8 +47,16 @@ func _physics_process(delta: float) -> void:
 	else:
 		_is_jumping = true # ジャンプ中.
 
+	if _cnt_jump < MAX_JUMP_CNT:
+		if Input.is_action_just_pressed("act_jump"):
+			# ジャンプ.
+			_velocity.y = -JUMP_POWER
+			_cnt_jump += 1
 
 func _process(delta: float) -> void:
+	_update_anim(delta)
+
+func _update_anim(delta:float) -> void:
 	_tAnim += delta
 	
 	# アニメーションの切り替え.
@@ -62,6 +66,22 @@ func _process(delta: float) -> void:
 		_is_directon_left = false # 右向き
 
 	_spr.flip_h = _is_directon_left
+	
+	if _is_jumping:
+		# ジャンプ中
+		if _cnt_jump == 1:
+			# 2段ジャンプできるので前方宙返りする.
+			var rot_speed = 2000
+			if _is_directon_left:
+				rot_speed *= -1
+			_spr.rotation_degrees += rot_speed * delta
+		else:
+			_spr.rotation_degrees = 0
+		_spr.frame = 2
+		return
+	
+	# 回転をリセットする.
+	_spr.rotation_degrees = 0	
 	
 	var tbl = [0, 1];
 	var t = _tAnim
