@@ -8,9 +8,10 @@
 script = ExtResource( 4 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 128, 512 )
+position = Vector2( 136, 800 )
 
 [node name="WallLayer" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
 
 [node name="Wall" parent="WallLayer" instance=ExtResource( 2 )]
 position = Vector2( 24, 832 )
@@ -110,3 +111,41 @@ position = Vector2( 24, 304 )
 
 [node name="Wall33" parent="WallLayer" instance=ExtResource( 2 )]
 position = Vector2( 24, 256 )
+
+[node name="Wall34" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 208 )
+
+[node name="Wall35" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 160 )
+
+[node name="Wall36" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 112 )
+
+[node name="Wall37" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 64 )
+
+[node name="Wall38" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 24, 16 )
+
+[node name="Wall40" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 256 )
+
+[node name="Wall41" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 208 )
+
+[node name="Wall42" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 160 )
+
+[node name="Wall43" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 112 )
+
+[node name="Wall44" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 64 )
+
+[node name="Wall45" parent="WallLayer" instance=ExtResource( 2 )]
+position = Vector2( 456, 16 )
+
+[node name="MainCamera" type="Camera2D" parent="."]
+position = Vector2( 240, 424 )
+current = true
+smoothing_enabled = true

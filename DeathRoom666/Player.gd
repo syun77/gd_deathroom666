@@ -4,6 +4,8 @@ const MOVE_SPEED = 30
 const DECAY_MOVE_SPEED = 0.9 
 const GRAVITY = 40
 const JUMP_POWER = 800
+const LIMIT_LEFT = 64.0
+const LIMIT_RIGHT = 480.0 - 64.0
 
 onready var _spr = $Player
 
