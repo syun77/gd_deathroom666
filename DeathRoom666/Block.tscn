@@ -13,7 +13,6 @@ extents = Vector2( 20, 12 )
 [node name="Block" type="KinematicBody2D"]
 position = Vector2( 0, 48 )
 collision_layer = 2
-collision_mask = 3
 script = ExtResource( 3 )
 
 [node name="Wall" type="Sprite" parent="."]

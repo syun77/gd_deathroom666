@@ -2,6 +2,7 @@ extends Node2D
 
 const Wall = preload("res://Wall.tscn")
 const Block = preload("res://Block.tscn")
+const Floor = preload("res://Floor.tscn")
 
 var _timer = 0.0
 var _timer_prev = 0.0
@@ -12,7 +13,14 @@ onready var _player = $Player
 onready var _camera = $MainCamera
 
 func _ready() -> void:
-	pass # Replace with function body.
+	# ランダムに足場を作る
+	for i in range(4):
+		var idx = randi()%(8-3)
+		for j in range(3):
+			var floor_obj = Floor.instance()
+			floor_obj.position.x = _block_x(idx+j)
+			floor_obj.position.y = (1.5 + i * 4) * 48.0
+			_block_layer.add_child(floor_obj)
 
 func _process(delta: float) -> void:
 	_debug()
@@ -57,9 +65,14 @@ func _check_block() -> void:
 		_appear_block()
 	_timer_prev = _timer
 	
+func _block_x(idx:int=-1) -> float:
+	if idx < 0:
+		idx = randi()%8
+	return (1.5 + idx) * 48.0
+
 func _appear_block() -> void:
 	var block = Block.instance()
-	block.position.x = (1.5 + randi()%8) * 48.0
+	block.position.x = _block_x()
 	block.position.y = _camera.position.y - 424
 	block.set_parent(_block_layer)
 	match randi()%20:
@@ -78,4 +91,4 @@ func _debug() -> void:
 
 	# 画面外ジャンプ.
 	if _player.position.y > _camera.position.y + 550:
-		_player._velocity.y = -1000
+		_player._velocity.y = -1500

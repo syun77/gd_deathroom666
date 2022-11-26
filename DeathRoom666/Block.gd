@@ -40,7 +40,6 @@ func _physics_process(delta: float) -> void:
 	# 移動処理.
 	var collision:KinematicCollision2D = move_and_collide(_velocity * delta)
 
-	
 	if collision:
 		# 着地したら消滅
 		freeze()

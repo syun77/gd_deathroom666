@@ -6,6 +6,7 @@
 extents = Vector2( 29.5, 8.5 )
 
 [node name="Floor" type="StaticBody2D"]
+collision_layer = 2
 
 [node name="Floor" type="Sprite" parent="."]
 position = Vector2( 1, 0 )
