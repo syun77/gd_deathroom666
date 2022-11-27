@@ -12,7 +12,7 @@ var _timer_prev = 0.0
 var _camera_x_prev = 0.0
 
 onready var _block_layer = $WallLayer
-onready var _player = $Player
+onready var _player = $MainLayer/Player
 onready var _camera = $MainCamera
 
 func _ready() -> void:

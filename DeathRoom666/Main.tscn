@@ -8,8 +8,10 @@
 [node name="Main" type="Node2D"]
 script = ExtResource( 4 )
 
-[node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 136, 800 )
+[node name="MainCamera" type="Camera2D" parent="."]
+position = Vector2( 240, 424 )
+current = true
+smoothing_enabled = true
 
 [node name="WallLayer" type="CanvasLayer" parent="."]
 follow_viewport_enable = true
@@ -146,10 +148,15 @@ position = Vector2( 456, 64 )
 [node name="Wall45" parent="WallLayer" instance=ExtResource( 2 )]
 position = Vector2( 456, 16 )
 
-[node name="MainCamera" type="Camera2D" parent="."]
-position = Vector2( 240, 424 )
-current = true
-smoothing_enabled = true
+[node name="EffectLayerBack" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
+[node name="MainLayer" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
+[node name="Player" parent="MainLayer" instance=ExtResource( 1 )]
+position = Vector2( 136, 800 )
+_effect_layer = NodePath("../../EffectLayerBack")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 

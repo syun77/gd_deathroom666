@@ -1,5 +1,13 @@
 extends KinematicBody2D
 
+# ------------------------------------
+# 依存シーン.
+# ------------------------------------
+const GHOST_EFFECT = preload("res://src/effects/GhostEffect.tscn")
+
+# ------------------------------------
+# 定数
+# ------------------------------------
 const ANIM_SPEED = 7 # アニメーション速度
 const MOVE_SPEED = 30
 const DECAY_MOVE_SPEED := 0.9 
@@ -34,23 +42,39 @@ enum eJumpScale {
 	LANDING, # 着地開始
 }
 
+# ------------------------------------
+# export.
+# ------------------------------------
+# エフェクトレイヤー.
+export(NodePath) var _effect_layer
+var _effects:CanvasLayer = null
+
+# ------------------------------------
 # onready.
+# ------------------------------------
 onready var _spr_normal = $Player
 onready var _spr_front_flip = $PlayerFrontFlip
 onready var _spr = $Player
 
+# ------------------------------------
 # メンバ変数.
+# ------------------------------------
 var _velocity = Vector2.ZERO # 速度ベクトル.
 var _is_jumping = false # ジャンプ中かどうか
 var _is_directon_left = false # 左向きかどうか.
 var _is_input_run = false # 走りの入力をしている.
 var _tAnim:float = 0 # アニメーションタイマー.
 var _cnt_jump = 0 # ジャンプ回数.
+var _ghost_timer := 0.0 # 残像エフェクトタイマー.
 
 # ジャンプ関連.
 var _jump_state = eJumpState.IDLE
 var _jump_scale = eJumpScale.NONE
 var _jump_scale_timer = 0
+
+# ------------------------------------
+# 関数定義.
+# ------------------------------------
 
 ## 物理更新.
 func _physics_process(delta: float) -> void:
@@ -125,6 +149,9 @@ func _check_collision():
 func _process(delta: float) -> void:
 	_update_anim(delta)
 	
+	# 残像エフェクト更新.
+	_update_ghost_effect(delta)
+	
 	# ジャンプ・着地演出
 	_update_jump_scale_anim(delta)
 
@@ -164,6 +191,23 @@ func _update_anim(delta:float) -> void:
 	t = int(t) % 2
 	_spr.frame = tbl[t]
 
+
+## 更新 > 残像エフェクト.
+func _update_ghost_effect(delta:float) -> void:
+	var time_scale = 10.0 # 0.1秒に1つ出現させる.
+	var prev = int(_ghost_timer * time_scale)
+	_ghost_timer += delta
+	var next = int(_ghost_timer * time_scale)
+
+	if prev != next:
+		if _effects == null:
+			_effects = get_node(_effect_layer)
+		if _effects != null:
+			var eft = GHOST_EFFECT.instance()
+			_effects.add_child(eft)
+			var is_front_flip = (_cnt_jump == 1)
+			eft.start(position, _spr.scale, _spr.frame, _spr.flip_h, is_front_flip)
+	
 
 ## 更新 > ジャンプアニメーション.
 func _update_jump(delta:float) -> void:
