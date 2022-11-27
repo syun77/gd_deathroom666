@@ -11,6 +11,12 @@ collision_mask = 7
 script = ExtResource( 2 )
 
 [node name="Player" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+offset = Vector2( 0, -21 )
+hframes = 8
+
+[node name="PlayerFrontFlip" type="Sprite" parent="."]
+visible = false
 position = Vector2( 0, -21 )
 texture = ExtResource( 1 )
 hframes = 8
