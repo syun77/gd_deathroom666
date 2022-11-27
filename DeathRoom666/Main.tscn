@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Wall.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/fonts/new_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Main.gd" type="Script" id=4]
+[ext_resource path="res://src/enemy/Enemy.tscn" type="PackedScene" id=5]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 4 )
@@ -157,6 +158,12 @@ follow_viewport_enable = true
 [node name="Player" parent="MainLayer" instance=ExtResource( 1 )]
 position = Vector2( 136, 800 )
 _effect_layer = NodePath("../../EffectLayerBack")
+
+[node name="Enemy" parent="MainLayer" instance=ExtResource( 5 )]
+position = Vector2( 232, 56 )
+
+[node name="BulletLayer" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 

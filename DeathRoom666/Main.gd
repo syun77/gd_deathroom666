@@ -14,8 +14,14 @@ var _camera_x_prev = 0.0
 onready var _block_layer = $WallLayer
 onready var _player = $MainLayer/Player
 onready var _camera = $MainCamera
+onready var _enemy = $MainLayer/Enemy
+onready var _bullet_layer = $BulletLayer
 
 func _ready() -> void:
+	_enemy.set_target(_player)
+	_enemy.set_camera(_camera)
+	_enemy.set_bullets(_bullet_layer)
+	
 	# ランダムに足場を作る
 	_create_random_floor()
 
@@ -58,12 +64,19 @@ func _update_camera() -> void:
 	
 	# 画面外の壁を消す.
 	# 画面外とする位置
+	var outside_top_y = _camera.position.y - 500
 	var outside_y = _camera.position.y + 500
 	
 	for block in _block_layer.get_children():
 		if block.position.y > outside_y:
 			# 画面外なので消す.
-			block.queue_free()	
+			block.queue_free()
+	
+	for bullet in _bullet_layer.get_children():
+		var py = bullet.position.y
+		if py < outside_top_y or py > outside_y:
+			# 画面外なので消す.
+			bullet.queue_free()
 	
 ## ブロックの出現.
 func _check_block() -> void:
