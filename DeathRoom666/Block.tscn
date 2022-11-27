@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://floor2.png" type="Texture" id=1]
-[ext_resource path="res://spike.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/floor2.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/spike.png" type="Texture" id=2]
 [ext_resource path="res://Block.gd" type="Script" id=3]
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -12,7 +12,7 @@ extents = Vector2( 20, 12 )
 
 [node name="Block" type="KinematicBody2D"]
 position = Vector2( 0, 48 )
-collision_layer = 2
+collision_layer = 8
 script = ExtResource( 3 )
 
 [node name="Wall" type="Sprite" parent="."]
@@ -23,7 +23,7 @@ texture = ExtResource( 1 )
 position = Vector2( 0, -48 )
 shape = SubResource( 2 )
 
-[node name="Spike" type="StaticBody2D" parent="."]
+[node name="Spike" type="Area2D" parent="."]
 position = Vector2( 0, -40 )
 collision_layer = 4
 

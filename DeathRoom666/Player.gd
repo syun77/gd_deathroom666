@@ -37,15 +37,22 @@ func _physics_process(delta: float) -> void:
 		_is_jumping = false # 床に着地している
 		_velocity.y = 0 # 重力クリア.	
 		_cnt_jump = 0 # ジャンプ回数をリセットする.
-			
-		# 衝突対象を取得する.
 		for i in range(get_slide_count()):
-			var col = get_slide_collision(i)
-			# とりあえず名前で判断
-			if "Block" in col.collider.name:
-				col.collider.freeze()
+			var col:KinematicCollision2D = get_slide_collision(i)
+			var collider:CollisionObject2D = col.collider
+			if collider.collision_layer & (1 << 3): # layer '4'
+				# Block(落下床)に衝突したので固定化させる.
+				collider.freeze()
 	else:
 		_is_jumping = true # ジャンプ中.
+	
+	# 衝突対象を取得する.
+	for i in range(get_slide_count()):
+		var col:KinematicCollision2D = get_slide_collision(i)
+		var collider:CollisionObject2D = col.collider
+		if collider.collision_layer & (1 << 2): # layer '3'
+			# Spikeと衝突した.
+			print("Spikeと衝突")
 
 	if _cnt_jump < MAX_JUMP_CNT:
 		if Input.is_action_just_pressed("act_jump"):

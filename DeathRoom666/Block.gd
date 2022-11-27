@@ -36,10 +36,12 @@ func _physics_process(delta: float) -> void:
 	# 重力を加算
 	_velocity.y += GRAVITY
 	_velocity.y = min(_velocity.y, _max_velocity_y)
-
-	# 移動処理.
+	
 	var collision:KinematicCollision2D = move_and_collide(_velocity * delta)
+	# 衝突処理
+	_hit(collision)
 
+func _hit(collision:KinematicCollision2D):
 	if collision:
 		# 着地したら消滅
 		freeze()
