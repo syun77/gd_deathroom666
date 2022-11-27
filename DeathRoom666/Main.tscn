@@ -174,3 +174,13 @@ margin_right = 232.0
 margin_bottom = 64.0
 theme = ExtResource( 3 )
 text = "SCORE: 123456"
+
+[node name="LabelCaption" type="Label" parent="UILayer"]
+visible = false
+margin_top = 352.0
+margin_right = 480.0
+margin_bottom = 416.0
+theme = ExtResource( 3 )
+text = "GAME OVER"
+align = 1
+valign = 1
