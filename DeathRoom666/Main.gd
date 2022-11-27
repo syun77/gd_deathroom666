@@ -26,7 +26,7 @@ func _create_random_floor():
 		for j in range(3):
 			var floor_obj = Floor.instance()
 			floor_obj.position.x = _block_x(idx+j)
-			floor_obj.position.y = (1.5 + i * 4) * 48.0
+			floor_obj.position.y = (1.5 + i * 4) * Common.TILE_SIZE
 			_block_layer.add_child(floor_obj)
 
 ## 更新
@@ -41,18 +41,18 @@ func _process(delta: float) -> void:
 func _update_camera() -> void:
 	var target_y = _player.position.y - SCROLL_OFFSET_Y
 	if target_y < _camera.position.y:
-		var prev = int(_camera_x_prev / 48.0)
-		var next = int(target_y / 48.0)
+		var prev = int(_camera_x_prev / Common.TILE_SIZE)
+		var next = int(target_y / Common.TILE_SIZE)
 		
 		# スクロール開始.
 		_camera.position.y = target_y
 		
 		# 横壁を作る.
 		if prev != next:
-			for x in [24.0, 480.0 - 24.0]:
+			for x in [Common.TILE_HALF, 480.0 - Common.TILE_HALF]:
 				var wall = Wall.instance()
 				wall.position.x = x
-				wall.position.y = next * 48.0 - 424 + 12
+				wall.position.y = next * Common.TILE_SIZE - 424 + 12
 				_block_layer.add_child(wall)
 		_camera_x_prev = target_y
 	
@@ -76,7 +76,7 @@ func _check_block() -> void:
 func _block_x(idx:int=-1) -> float:
 	if idx < 0:
 		idx = randi()%8
-	return (1.5 + idx) * 48.0
+	return (1.5 + idx) * Common.TILE_SIZE
 
 ## ブロックの出現.
 func _appear_block() -> void:
