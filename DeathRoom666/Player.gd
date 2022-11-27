@@ -73,7 +73,13 @@ var _jump_scale = eJumpScale.NONE
 var _jump_scale_timer = 0
 
 # ------------------------------------
-# 関数定義.
+# public function.
+# ------------------------------------
+func stomp() -> void:
+	_velocity.y = -1000
+
+# ------------------------------------
+# private function.
 # ------------------------------------
 
 ## 物理更新.
@@ -131,7 +137,7 @@ func _on_floor() -> void:
 	for i in range(get_slide_count()):
 		var col:KinematicCollision2D = get_slide_collision(i)
 		var collider:CollisionObject2D = col.collider
-		if collider.collision_layer & (1 << 3): # layer '4'
+		if collider.collision_layer & (1 << Common.eColLayer.BLOCK):
 			# Block(落下床)に衝突したので固定化させる.
 			collider.freeze()
 
@@ -141,7 +147,7 @@ func _check_collision():
 	for i in range(get_slide_count()):
 		var col:KinematicCollision2D = get_slide_collision(i)
 		var collider:CollisionObject2D = col.collider
-		if collider.collision_layer & (1 << 2): # layer '3'
+		if collider.collision_layer & (1 << Common.eColLayer.SPIKE):
 			# Spikeと衝突した.
 			print("Spikeと衝突")
 
@@ -191,7 +197,6 @@ func _update_anim(delta:float) -> void:
 	t = int(t) % 2
 	_spr.frame = tbl[t]
 
-
 ## 更新 > 残像エフェクト.
 func _update_ghost_effect(delta:float) -> void:
 	var time_scale = 10.0 # 0.1秒に1つ出現させる.
@@ -205,7 +210,7 @@ func _update_ghost_effect(delta:float) -> void:
 		if _effects != null:
 			var eft = GHOST_EFFECT.instance()
 			_effects.add_child(eft)
-			var is_front_flip = (_cnt_jump == 1)
+			var is_front_flip = _is_front_flip()
 			eft.start(position, _spr.scale, _spr.frame, _spr.flip_h, is_front_flip)
 	
 
@@ -226,7 +231,7 @@ func _update_jump_scale_anim(delta:float) -> void:
 	# 描画対象となるスプライトの切り替え.
 	_spr_normal.visible = false
 	_spr_front_flip.visible = false
-	if _cnt_jump == 1: # 回転させる.
+	if _is_front_flip(): # 回転させる.
 		_spr = _spr_front_flip
 	else:
 		_spr = _spr_normal
@@ -253,3 +258,11 @@ func _update_jump_scale_anim(delta:float) -> void:
 			# もとに戻す
 			_spr.scale.x = 1
 			_spr.scale.y = 1
+
+
+## 前方宙返り中かどうか
+func _is_front_flip() -> bool:
+	if _cnt_jump != 1:
+		return false
+	
+	return true

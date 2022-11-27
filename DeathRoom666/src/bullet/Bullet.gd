@@ -21,7 +21,7 @@ func _process(delta: float) -> void:
 
 func _on_Bullet_body_entered(body: Node) -> void:
 	# 衝突対象とするレイヤー.
-	var tbl = [0, 1]
+	var tbl = [Common.eColLayer.PLAYER, Common.eColLayer.WALL]
 	var layer = body.collision_layer
 	var is_find = false
 	for id in tbl:
@@ -31,7 +31,7 @@ func _on_Bullet_body_entered(body: Node) -> void:
 	if is_find == false:
 		return
 		
-	if body.collision_layer & (1 << 1):
+	if layer & (1 << Common.eColLayer.WALL):
 		if not "Wall" in body.name:
 			return # "Wall" 以外は衝突しないことにします
 
