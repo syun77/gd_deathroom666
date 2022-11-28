@@ -75,8 +75,13 @@ var _jump_scale_timer = 0
 # ------------------------------------
 # public function.
 # ------------------------------------
+## 踏みつけ.
 func stomp() -> void:
 	_velocity.y = -1000
+
+## 消滅開始.
+func vanish() -> void:
+	queue_free()
 
 # ------------------------------------
 # private function.

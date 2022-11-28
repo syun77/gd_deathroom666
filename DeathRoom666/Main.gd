@@ -18,6 +18,8 @@ const SCROLL_OFFSET_Y = 100.0
 # 画面外のオフセット.
 const OUTSIDE_OFFSET_Y = 500.0
 const DBG_OUTSIDE_OFFSET_Y = 550.0
+# カメラ揺れ時間.
+const TIMER_SHAKE = 0.5
 
 # 状態 .
 enum eState {
@@ -42,7 +44,9 @@ onready var _labelCaption = $UILayer/LabelCaption
 var _state = eState.MAIN
 var _timer = 0.0
 var _timer_prev = 0.0
+# カメラ用.
 var _camera_x_prev = 0.0
+var _camera_shake_position = Vector2.ZERO
 
 # ------------------------------------------
 # private functions.
@@ -69,9 +73,44 @@ func _create_random_floor():
 func _process(delta: float) -> void:
 	_debug()
 	
+	match _state:
+		eState.MAIN:
+			_update_main(delta)
+		eState.GAMEOVER:
+			_update_gameover(delta)
+
+## 更新 > メイン.
+func _update_main(delta:float) -> void:
+	
+	# プレイヤー死亡チェック.
+	if is_instance_valid(_player) == false:
+		_enter_gameover()
+		_state = eState.GAMEOVER
+		_timer = TIMER_SHAKE
+		return
+		
 	_timer += delta
 	_update_camera()	
 	_check_block()
+	_check_outside()
+
+## 更新 > ゲームオーバー.
+func _update_gameover(delta:float) -> void:
+	if _timer > 0:
+		# カメラを揺らす.
+		var rate = _timer / TIMER_SHAKE
+		var dx = rand_range(-64, 64) * rate
+		var dy = rand_range(-16, 16) * rate
+		_camera.position = _camera_shake_position + Vector2(dx, dy)
+		_timer -= delta
+		return
+
+	_labelCaption.visible = true	
+	_camera.position = _camera_shake_position
+	
+	if Input.is_action_just_pressed("act_jump"):
+		# リスタート.
+		get_tree().change_scene("res://Main.tscn")
 
 ## カメラの更新.
 func _update_camera() -> void:
@@ -92,21 +131,6 @@ func _update_camera() -> void:
 				_block_layer.add_child(wall)
 		_camera_x_prev = target_y
 	
-	# 画面外の壁を消す.
-	# 画面外とする位置
-	var outside_top_y = _camera.position.y - OUTSIDE_OFFSET_Y
-	var outside_y = _camera.position.y + OUTSIDE_OFFSET_Y
-	
-	for block in _block_layer.get_children():
-		if block.position.y > outside_y:
-			# 画面外なので消す.
-			block.queue_free()
-	
-	for bullet in _bullet_layer.get_children():
-		var py = bullet.position.y
-		if py < outside_top_y or py > outside_y:
-			# 画面外なので消す.
-			bullet.queue_free()
 	
 ## ブロックの出現.
 func _check_block() -> void:
@@ -137,6 +161,36 @@ func _appear_block() -> void:
 			block.set_max_velocity_y(300)
 	
 	_block_layer.add_child(block)
+
+## 画面外チェック.
+func _check_outside() -> void:
+	# 画面外とする位置
+	var outside_top_y = _camera.position.y - OUTSIDE_OFFSET_Y
+	var outside_y = _camera.position.y + OUTSIDE_OFFSET_Y
+	
+	# 画面外の壁を消す.
+	for block in _block_layer.get_children():
+		if block.position.y > outside_y:
+			# 画面外なので消す.
+			block.queue_free()
+	
+	for bullet in _bullet_layer.get_children():
+		var py = bullet.position.y
+		if py < outside_top_y or py > outside_y:
+			# 画面外なので消す.
+			bullet.queue_free()
+	
+	# プレイヤー死亡判定.
+	if _player.position.y > outside_y:
+		_player.vanish()
+
+## ゲームオーバー開始.
+func _enter_gameover():
+	# カメラ位置を保持.
+	_camera_shake_position = _camera.position
+	
+	# スムージングを無効化.
+	_camera.smoothing_enabled = false
 
 
 # ------------------------------------------

@@ -27,6 +27,7 @@ var _camera:Camera2D = null
 var _velocity := Vector2()
 var _timer := 0.0
 var _target:Node2D = null
+var _target_last_position = Vector2.ZERO
 var _bullets:CanvasLayer = null
 
 # --------------------------------
@@ -61,17 +62,21 @@ func _set_velocity(deg:float, speed:float) -> void:
 	
 ## 狙い撃ち角度を取得する.
 func _get_aim() -> float:
-	if _target == null:
-		return 180.0
+	var pos = _target_last_position
+	if is_instance_valid(_target):
+		pos = _target.position
+		_target_last_position = pos
 	
-	var d = _target.position - position
+	var d = pos - position
 	return rad2deg(atan2(-d.y, d.x))
 	
 func _get_aim2() -> float:
-	if _target == null:
-		return 180.0
+	var pos = _target_last_position
+	if is_instance_valid(_target):
+		pos = _target.position
+		_target_last_position = pos
 	
-	var d = _target.position - position
+	var d = pos - position
 	return rad2deg(atan2(d.y, d.x))
 
 func _process(delta: float) -> void:
