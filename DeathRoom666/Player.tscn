@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/images/player.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
+[ext_resource path="res://assets/images/barrier.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 14.5, 19.5 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 40.0125
 
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 7
@@ -26,6 +30,21 @@ position = Vector2( 0, -19 )
 shape = SubResource( 1 )
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_top = -54.0
 margin_right = 40.0
 margin_bottom = -40.0
+
+[node name="Barrier" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 32
+
+[node name="Barrier" type="Sprite" parent="Barrier"]
+position = Vector2( 0, -21 )
+texture = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier"]
+position = Vector2( 0, -21 )
+shape = SubResource( 2 )
+
+[connection signal="area_entered" from="Barrier" to="." method="_on_Barrier_area_entered"]

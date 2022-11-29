@@ -80,6 +80,7 @@ ui_reset={
 2d_physics/layer_5="Enemy"
 2d_physics/layer_6="Bullet"
 2d_physics/layer_7="Shot"
+2d_physics/layer_8="Barrier"
 
 [physics]
 

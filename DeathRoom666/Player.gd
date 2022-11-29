@@ -292,3 +292,9 @@ func _is_front_flip() -> bool:
 		return false
 	
 	return true
+
+func _on_Barrier_area_entered(area: CollisionObject2D) -> void:
+	var layer = area.collision_layer
+	if layer & (1 << Common.eColLayer.BULLET):
+		# 敵弾であれば消す.
+		area.vanish()
