@@ -66,11 +66,14 @@ var _is_input_run = false # 走りの入力をしている.
 var _tAnim:float = 0 # アニメーションタイマー.
 var _cnt_jump = 0 # ジャンプ回数.
 var _ghost_timer := 0.0 # 残像エフェクトタイマー.
+var _request_dead = false # 死亡リクエスト.
 
 # ジャンプ関連.
 var _jump_state = eJumpState.IDLE
 var _jump_scale = eJumpScale.NONE
 var _jump_scale_timer = 0
+
+var _cnt_damage_anim = 0
 
 # ------------------------------------
 # public function.
@@ -81,14 +84,32 @@ func stomp() -> void:
 
 ## 消滅開始.
 func vanish() -> void:
-	queue_free()
+	_request_dead = true
+	# 更新を止める.
+	set_process(false)
+	set_physics_process(false)
+
+## 死亡リクエストがあるかどうか.
+func is_request_dead() -> bool:
+	return _request_dead
+
+# ダメージアニメ更新.
+func update_damage() -> void:
+	_cnt_damage_anim += 1
+	if _cnt_damage_anim%4 < 2:
+		_spr.frame = eSpr.DAMAGE1
+	else:
+		_spr.frame = eSpr.DAMAGE2
 
 # ------------------------------------
 # private function.
 # ------------------------------------
-
 ## 物理更新.
 func _physics_process(delta: float) -> void:
+	if _request_dead:
+		# 死亡リクエストが届いた.
+		queue_free()
+		
 	# 重力を加算
 	_velocity.y += GRAVITY
 	
@@ -154,10 +175,10 @@ func _check_collision():
 		var collider:CollisionObject2D = col.collider
 		if collider.collision_layer & (1 << Common.eColLayer.SPIKE):
 			# Spikeと衝突した.
-			print("Spikeと衝突")
+			vanish()
 
 ## 更新.
-func _process(delta: float) -> void:
+func _process(delta: float) -> void:	
 	_update_anim(delta)
 	
 	# 残像エフェクト更新.

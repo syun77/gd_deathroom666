@@ -18,18 +18,21 @@ const SCROLL_OFFSET_Y = 100.0
 # 画面外のオフセット.
 const OUTSIDE_OFFSET_Y = 500.0
 const DBG_OUTSIDE_OFFSET_Y = 550.0
-# カメラ揺れ時間.
-const TIMER_SHAKE = 0.5
+# タイマー関連.
+const TIMER_HIT_STOP = 0.2 # ヒットストップ.
+const TIMER_SHAKE = 0.5 # カメラ揺れ時間.
 
 # 状態 .
 enum eState {
 	MAIN, # メイン.
+	HIT_STOP, # ダメージストップ.
 	GAMEOVER, # ゲームオーバー.
 }
 
 # ------------------------------------------
 # onready
 # ------------------------------------------
+onready var _main_layer = $MainLayer
 onready var _block_layer = $WallLayer
 onready var _player = $MainLayer/Player
 onready var _camera = $MainCamera
@@ -76,6 +79,8 @@ func _process(delta: float) -> void:
 	match _state:
 		eState.MAIN:
 			_update_main(delta)
+		eState.HIT_STOP:
+			_update_hit_stop(delta)
 		eState.GAMEOVER:
 			_update_gameover(delta)
 
@@ -83,16 +88,31 @@ func _process(delta: float) -> void:
 func _update_main(delta:float) -> void:
 	
 	# プレイヤー死亡チェック.
-	if is_instance_valid(_player) == false:
-		_enter_gameover()
-		_state = eState.GAMEOVER
-		_timer = TIMER_SHAKE
+	if is_instance_valid(_player) == false or _player.is_request_dead():
+		_state = eState.HIT_STOP
+		_timer = TIMER_HIT_STOP
+		_enter_hit_stop()
 		return
 		
 	_timer += delta
 	_update_camera()	
 	_check_block()
 	_check_outside()
+
+## 更新 > ヒットストップ.
+func _update_hit_stop(delta:float) -> void:
+	
+	if is_instance_valid(_player):
+		# ダメージアニメ更新.
+		_player.update_damage()
+	
+	_timer -= delta
+	if _timer <= 0:
+		# そして時は動き出す...
+		_set_process_all_objects(true)
+		_enter_gameover()
+		_state = eState.GAMEOVER
+		_timer = TIMER_SHAKE
 
 ## 更新 > ゲームオーバー.
 func _update_gameover(delta:float) -> void:
@@ -184,6 +204,11 @@ func _check_outside() -> void:
 	if _player.position.y > outside_y:
 		_player.vanish()
 
+## ヒットストップ開始.
+func _enter_hit_stop():
+	# オブジェクトの動きをすべて止める.
+	_set_process_all_objects(false)
+
 ## ゲームオーバー開始.
 func _enter_gameover():
 	# カメラ位置を保持.
@@ -192,6 +217,15 @@ func _enter_gameover():
 	# スムージングを無効化.
 	_camera.smoothing_enabled = false
 
+func _set_process_all_objects(b:bool) -> void:
+	for obj in _main_layer.get_children():
+		obj.set_process(b)
+		obj.set_physics_process(b)
+	for wall in _block_layer.get_children():
+		wall.set_process(b)
+		wall.set_physics_process(b)
+	for bullet in _bullet_layer.get_children():
+		bullet.set_process(b)
 
 # ------------------------------------------
 # debug functions.

@@ -45,3 +45,10 @@ func _hit(collision:KinematicCollision2D):
 	if collision:
 		# 着地したら消滅
 		freeze()
+
+
+## スパイクに何かが衝突した.
+func _on_Spike_body_entered(body: CollisionObject2D) -> void:
+	if body.collision_layer & (1 << Common.eColLayer.PLAYER):
+		# プレイヤーと衝突.
+		body.vanish()
