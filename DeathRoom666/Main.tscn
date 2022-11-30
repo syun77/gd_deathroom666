@@ -165,6 +165,9 @@ position = Vector2( 232, 56 )
 [node name="BulletLayer" type="CanvasLayer" parent="."]
 follow_viewport_enable = true
 
+[node name="EffectLayerFront" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="LabelScore" type="Label" parent="UILayer"]

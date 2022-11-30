@@ -19,7 +19,7 @@ const SCROLL_OFFSET_Y = 100.0
 const OUTSIDE_OFFSET_Y = 500.0
 const DBG_OUTSIDE_OFFSET_Y = 550.0
 # タイマー関連.
-const TIMER_HIT_STOP = 0.2 # ヒットストップ.
+const TIMER_HIT_STOP = 0.5 # ヒットストップ.
 const TIMER_SHAKE = 0.5 # カメラ揺れ時間.
 
 # 状態 .
@@ -38,6 +38,7 @@ onready var _player = $MainLayer/Player
 onready var _camera = $MainCamera
 onready var _enemy = $MainLayer/Enemy
 onready var _bullet_layer = $BulletLayer
+onready var _effect_layer = $EffectLayerFront
 onready var _labelScore = $UILayer/LabelScore
 onready var _labelCaption = $UILayer/LabelCaption
 
@@ -55,12 +56,17 @@ var _camera_shake_position = Vector2.ZERO
 # private functions.
 # ------------------------------------------
 func _ready() -> void:
+	#OS.set_window_size(Vector2(160, 300))
+	
 	_enemy.set_target(_player)
 	_enemy.set_camera(_camera)
 	_enemy.set_bullets(_bullet_layer)
 	
 	# ランダムに足場を作る
 	_create_random_floor()
+	
+	# セットアップ.
+	Common.setup(_effect_layer)
 
 ## ランダムに足場を作る
 func _create_random_floor():

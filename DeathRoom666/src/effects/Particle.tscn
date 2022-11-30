@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/effects/Particle.gd" type="Script" id=1]
+[ext_resource path="res://assets/images/particle.png" type="Texture" id=2]
+
+[node name="Partcle" type="Sprite"]
+texture = ExtResource( 2 )
+script = ExtResource( 1 )

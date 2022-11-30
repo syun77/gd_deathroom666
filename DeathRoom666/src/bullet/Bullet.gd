@@ -13,6 +13,8 @@ func set_velocity(deg:float, speed:float) -> void:
 
 ## 弾を消す.
 func vanish() -> void:
+	Common.start_particle(position, 1.0, Color.white)
+	
 	queue_free()
 
 func _ready() -> void:

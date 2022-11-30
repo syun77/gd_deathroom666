@@ -55,6 +55,7 @@ var _effects:CanvasLayer = null
 onready var _spr_normal = $Player
 onready var _spr_front_flip = $PlayerFrontFlip
 onready var _spr = $Player
+onready var _barrier = $Barrier
 
 # ------------------------------------
 # メンバ変数.
@@ -104,6 +105,17 @@ func update_damage() -> void:
 # ------------------------------------
 # private function.
 # ------------------------------------
+## ready.
+func _ready() -> void:
+	# バリアを無効にしておく.
+	_enable_barrier(false)
+
+## バリアの有効フラグを設定.
+func _enable_barrier(b:bool) -> void:
+	_barrier.visible = b # 表示フラグを設定.
+	_barrier.monitoring = b # 衝突を自身が検知するかどうか.
+	_barrier.monitorable = b # 他者が衝突判定をするかどうか.
+	
 ## 物理更新.
 func _physics_process(delta: float) -> void:
 	if _request_dead:
@@ -148,6 +160,11 @@ func _physics_process(delta: float) -> void:
 			if _cnt_jump == 1:
 				_jump_scale = eJumpScale.JUMPING
 				_jump_scale_timer = JUMP_SCALE_TIME
+	
+	if _is_front_flip():
+		_enable_barrier(true)
+	else:
+		_enable_barrier(false)
 		
 ## 着地したときの処理.
 func _on_floor() -> void:
