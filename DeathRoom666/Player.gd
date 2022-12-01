@@ -4,6 +4,7 @@ extends KinematicBody2D
 # 依存シーン.
 # ------------------------------------
 const GHOST_EFFECT = preload("res://src/effects/GhostEffect.tscn")
+const SHOT_OBJ = preload("res://src/shot/Shot.tscn")
 
 # ------------------------------------
 # 定数
@@ -79,6 +80,7 @@ var _cnt_damage_anim = 0
 # ------------------------------------
 # public function.
 # ------------------------------------
+
 ## 踏みつけ.
 func stomp() -> void:
 	_velocity.y = -1000
@@ -310,8 +312,15 @@ func _is_front_flip() -> bool:
 	
 	return true
 
+## バリアに何かが衝突.
 func _on_Barrier_area_entered(area: CollisionObject2D) -> void:
 	var layer = area.collision_layer
 	if layer & (1 << Common.eColLayer.BULLET):
 		# 敵弾であれば消す.
 		area.vanish()
+		# ショットを発生させる.
+		var parent = Common.get_layer("shot")
+		var s = SHOT_OBJ.instance()
+		s.position = area.position
+		s.set_velocity(area.get_velocity())
+		parent.add_child(s)

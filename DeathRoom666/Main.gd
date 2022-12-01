@@ -36,7 +36,9 @@ onready var _main_layer = $MainLayer
 onready var _block_layer = $WallLayer
 onready var _player = $MainLayer/Player
 onready var _camera = $MainCamera
-onready var _enemy = $MainLayer/Enemy
+onready var _enemy = $EnemyLayer/Enemy
+onready var _enemy_layer = $EnemyLayer
+onready var _shot_layer = $ShotLayer
 onready var _bullet_layer = $BulletLayer
 onready var _effect_layer = $EffectLayerFront
 onready var _labelScore = $UILayer/LabelScore
@@ -66,7 +68,13 @@ func _ready() -> void:
 	_create_random_floor()
 	
 	# セットアップ.
-	Common.setup(_effect_layer)
+	var layers = {
+		"enemy": _enemy_layer,
+		"shot": _shot_layer,
+		"bullet": _bullet_layer,
+		"effect": _effect_layer,
+	}
+	Common.setup(layers)
 
 ## ランダムに足場を作る
 func _create_random_floor():

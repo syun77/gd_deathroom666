@@ -25,17 +25,21 @@ enum eColLayer {
 #-----------------------------------
 # vars.
 #-----------------------------------
-var _effect_layer:CanvasLayer
+var _layers = []
 
 #-----------------------------------
 # public functions.
 #-----------------------------------
-func setup(effect_layer:CanvasLayer) -> void:
-	_effect_layer = effect_layer
+func setup(layers) -> void:
+	_layers = layers
+	
+func get_layer(name:String) -> CanvasLayer:
+	return _layers[name]
 
 func add_particle() -> Particle:
+	var parent = get_layer("effect")
 	var p = ParticleObj.instance()
-	_effect_layer.add_child(p)
+	parent.add_child(p)
 	return p
 
 func start_particle(pos:Vector2, time:float, color:Color) -> void:

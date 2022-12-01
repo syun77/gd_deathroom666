@@ -11,6 +11,10 @@ func set_velocity(deg:float, speed:float) -> void:
 	_velocity.x = cos(rad) * speed
 	_velocity.y = -sin(rad) * speed
 
+## 移動量を取得する.
+func get_velocity() -> Vector2:
+	return _velocity
+
 ## 弾を消す.
 func vanish() -> void:
 	Common.start_particle(position, 1.0, Color.white)
