@@ -39,6 +39,7 @@ func get_velocity() -> Vector2:
 
 ## 消滅する
 func vanish() -> void:
+	Common.start_particle(position, 1.0, Color.white)
 	queue_free()
 
 # ------------------------------------
@@ -98,9 +99,16 @@ func _diff_angle(now:float, next:float) -> float:
 		d -= 360.0
 	return d
 
-## 何かと衝突した.
+## Area2Dと衝突した.
 func _on_Shot_area_entered(area: Area2D) -> void:
 	var layer = area.collision_layer
+	if layer & (1 << Common.eColLayer.ENEMY):
+		# 敵と衝突したら消える.
+		vanish()
+
+## Body2Dと衝突した.
+func _on_Shot_body_entered(body: PhysicsBody2D) -> void:
+	var layer = body.collision_layer
 	if layer & (1 << Common.eColLayer.ENEMY):
 		# 敵と衝突したら消える.
 		vanish()

@@ -1,19 +1,38 @@
 extends KinematicBody2D
 
+# ---------------------------------------
+# preload.
+# ---------------------------------------
 #const Wall = preload("res://Wall.tscn")
 const Wall = preload("res://Floor.tscn")
 
+# ---------------------------------------
+# 定数.
+# ---------------------------------------
 const GRAVITY = 40
 const DEFAULT_MAX_VELOCITY = 100
 
+# ---------------------------------------
+# onready.
+# ---------------------------------------
+onready var _spike = $Spike
+
+# ---------------------------------------
+# vars.
+# ---------------------------------------
 var _parent:CanvasLayer = null
 var _velocity = Vector2()
 var _freezed = false
 var _max_velocity_y = DEFAULT_MAX_VELOCITY
 
+# ---------------------------------------
+# public functions.
+# ---------------------------------------
+## Y方向の最高速度を設定する.
 func set_max_velocity_y(dy:float) -> void:
 	_max_velocity_y = dy
 
+## 動きを止める.
 func freeze() -> void:
 	if _freezed:
 		return # フリーズ済み.
@@ -25,10 +44,14 @@ func freeze() -> void:
 	position.y -= 48.0 # 1タイルぶんずれる.
 	wall.position = position
 	_parent.add_child(wall)
-		
+
+## 親ノードを設定する.
 func set_parent(layer:CanvasLayer) -> void:
 	_parent = layer
 
+# ---------------------------------------
+# private functions.
+# ---------------------------------------
 func _ready() -> void:
 	pass
 
@@ -46,7 +69,9 @@ func _hit(collision:KinematicCollision2D):
 		# 着地したら消滅
 		freeze()
 
-
+# ---------------------------------------
+# signals.
+# ---------------------------------------
 ## スパイクに何かが衝突した.
 func _on_Spike_body_entered(body: CollisionObject2D) -> void:
 	if body.collision_layer & (1 << Common.eColLayer.PLAYER):

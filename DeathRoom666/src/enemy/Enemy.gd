@@ -69,7 +69,8 @@ func _get_aim() -> float:
 	
 	var d = pos - position
 	return rad2deg(atan2(-d.y, d.x))
-	
+
+## 狙い撃ち角度を取得する(yの反転なし).
 func _get_aim2() -> float:
 	var pos = _target_last_position
 	if is_instance_valid(_target):

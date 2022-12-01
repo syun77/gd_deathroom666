@@ -159,7 +159,7 @@ func _physics_process(delta: float) -> void:
 			_jump_state = eJumpState.JUMP
 			_velocity.y = -JUMP_POWER
 			_cnt_jump += 1
-			if _cnt_jump == 1:
+			if _is_front_flip():
 				_jump_scale = eJumpScale.JUMPING
 				_jump_scale_timer = JUMP_SCALE_TIME
 	
@@ -261,7 +261,7 @@ func _update_ghost_effect(delta:float) -> void:
 
 ## 更新 > ジャンプアニメーション.
 func _update_jump(delta:float) -> void:
-	if _cnt_jump == 1: # 1段目ジャンプ中.
+	if _is_front_flip(): # 1段目ジャンプ中.
 		# 2段ジャンプできるので前方宙返りする.
 		var rot_speed = 2000 # 回転速度.
 		if _is_directon_left:

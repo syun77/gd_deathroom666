@@ -185,6 +185,8 @@ func _appear_block() -> void:
 	block.position.x = _block_x()
 	block.position.y = _camera.position.y - 424
 	block.set_parent(_block_layer)
+	_block_layer.add_child(block)
+	
 	# TODO: ランダムで速度を設定.
 	match randi()%20:
 		0:
@@ -193,8 +195,8 @@ func _appear_block() -> void:
 			block.set_max_velocity_y(200)
 		2:
 			block.set_max_velocity_y(300)
-	
-	_block_layer.add_child(block)
+		_:
+			pass
 
 ## 画面外チェック.
 func _check_outside() -> void:
@@ -207,6 +209,12 @@ func _check_outside() -> void:
 		if block.position.y > outside_y:
 			# 画面外なので消す.
 			block.queue_free()
+	
+	for shot in _shot_layer.get_children():
+		var py = shot.position.y
+		if py < outside_top_y or py > outside_y:
+			# 画面外なので消す.
+			shot.queue_free()
 	
 	for bullet in _bullet_layer.get_children():
 		var py = bullet.position.y
