@@ -185,9 +185,9 @@ func _on_floor() -> void:
 		var collider:CollisionObject2D = col.collider
 		if collider.collision_layer & (1 << Common.eColLayer.BLOCK):
 			# Block(落下床)に衝突したので固定化させる.
-			collider.freeze()
-			# 弾を撃つ
-			_shoot(3)
+			if collider.freeze():
+				# 弾を撃つ
+				_shoot(3)
 
 ## 衝突チェックする.
 func _check_collision():
@@ -319,7 +319,7 @@ func _shoot(cnt:int) -> void:
 	var v := Vector2()
 	# ショットを発生させる.
 	for i in range(cnt):
-		var spd = 100
+		var spd = rand_range(100, 500)
 		var rad = deg2rad(270 + rand_range(-30, 30))
 		v.x = cos(rad) * spd
 		v.y = -sin(rad) * spd

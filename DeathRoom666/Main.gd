@@ -43,6 +43,7 @@ onready var _bullet_layer = $BulletLayer
 onready var _effect_layer = $EffectLayerFront
 onready var _labelScore = $UILayer/LabelScore
 onready var _labelCaption = $UILayer/LabelCaption
+onready var _healthBar = $UILayer/ProgressBar
 
 # ------------------------------------------
 # vars.
@@ -58,7 +59,7 @@ var _camera_shake_position = Vector2.ZERO
 # private functions.
 # ------------------------------------------
 func _ready() -> void:
-	OS.set_window_size(Vector2(160, 300))
+	#OS.set_window_size(Vector2(160, 300))
 	
 	_enemy.set_target(_player)
 	_enemy.set_camera(_camera)
@@ -112,6 +113,7 @@ func _update_main(delta:float) -> void:
 	_update_camera()	
 	_check_block()
 	_check_outside()
+	_update_enemy_hp()
 
 ## 更新 > ヒットストップ.
 func _update_hit_stop(delta:float) -> void:
@@ -226,6 +228,14 @@ func _check_outside() -> void:
 	# プレイヤー死亡判定.
 	if _player.position.y > outside_y:
 		_player.vanish()
+
+## 敵HPバーの更新.
+func _update_enemy_hp() -> void:
+	if is_instance_valid(_enemy) == false:
+		return
+	
+	var rate = _enemy.hpratio()
+	_healthBar.value = 100 * rate
 
 ## ヒットストップ開始.
 func _enter_hit_stop():

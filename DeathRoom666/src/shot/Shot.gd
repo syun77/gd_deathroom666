@@ -112,3 +112,5 @@ func _on_Shot_body_entered(body: PhysicsBody2D) -> void:
 	if layer & (1 << Common.eColLayer.ENEMY):
 		# 敵と衝突したら消える.
 		vanish()
+		# ダメージを与える.
+		body.damage(1)

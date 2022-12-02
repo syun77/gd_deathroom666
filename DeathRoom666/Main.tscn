@@ -177,10 +177,10 @@ follow_viewport_enable = true
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="LabelScore" type="Label" parent="UILayer"]
-margin_left = 24.0
-margin_top = 16.0
-margin_right = 232.0
-margin_bottom = 64.0
+margin_left = 8.0
+margin_top = 808.0
+margin_right = 249.0
+margin_bottom = 856.0
 theme = ExtResource( 3 )
 text = "SCORE: 123456"
 
@@ -193,3 +193,11 @@ theme = ExtResource( 3 )
 text = "GAME OVER"
 align = 1
 valign = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="UILayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -168.0
+margin_top = 16.0
+margin_right = 168.0
+margin_bottom = 40.0

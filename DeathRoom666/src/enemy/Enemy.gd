@@ -29,6 +29,8 @@ var _timer := 0.0
 var _target:Node2D = null
 var _target_last_position = Vector2.ZERO
 var _bullets:CanvasLayer = null
+var _hp:int = 10
+var _hp_max:int = 10
 
 # --------------------------------
 # public functions.
@@ -39,6 +41,21 @@ func set_target(target:Node2D) -> void:
 	_target = target
 func set_bullets(bullets:CanvasLayer) -> void:
 	_bullets = bullets
+
+## HPの初期化.
+func init_hp(v:int) -> void:
+	_hp = v
+	_hp_max = v
+
+## HPを減らす.
+func damage(v:int) -> void:
+	_hp -= v
+	if _hp < 0:
+		_hp = 0
+
+## HPの割合を取得する.
+func hpratio() -> float:
+	return 1.0 * _hp / _hp_max
 
 # --------------------------------
 # private functions.

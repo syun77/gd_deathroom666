@@ -33,9 +33,9 @@ func set_max_velocity_y(dy:float) -> void:
 	_max_velocity_y = dy
 
 ## 動きを止める.
-func freeze() -> void:
+func freeze() -> bool:
 	if _freezed:
-		return # フリーズ済み.
+		return false # フリーズ済み.
 	
 	_freezed = true
 	# 固定ブロックにする
@@ -44,6 +44,8 @@ func freeze() -> void:
 	position.y -= 48.0 # 1タイルぶんずれる.
 	wall.position = position
 	_parent.add_child(wall)
+	
+	return true
 
 ## 親ノードを設定する.
 func set_parent(layer:CanvasLayer) -> void:
