@@ -163,7 +163,8 @@ func _physics_process(delta: float) -> void:
 				_jump_scale = eJumpScale.JUMPING
 				_jump_scale_timer = JUMP_SCALE_TIME
 	
-	if _is_front_flip():
+	if _is_jumping == false:
+		# ジャンプしていなければバリア有効.
 		_enable_barrier(true)
 	else:
 		_enable_barrier(false)
@@ -185,6 +186,8 @@ func _on_floor() -> void:
 		if collider.collision_layer & (1 << Common.eColLayer.BLOCK):
 			# Block(落下床)に衝突したので固定化させる.
 			collider.freeze()
+			# 弾を撃つ
+			_shoot(3)
 
 ## 衝突チェックする.
 func _check_collision():
@@ -312,15 +315,23 @@ func _is_front_flip() -> bool:
 	
 	return true
 
+func _shoot(cnt:int) -> void:
+	var v := Vector2()
+	# ショットを発生させる.
+	for i in range(cnt):
+		var spd = 100
+		var rad = deg2rad(270 + rand_range(-30, 30))
+		v.x = cos(rad) * spd
+		v.y = -sin(rad) * spd
+		var parent = Common.get_layer("shot")
+		var s = SHOT_OBJ.instance()
+		s.position = position
+		s.set_velocity(v)
+		parent.add_child(s)
+
 ## バリアに何かが衝突.
 func _on_Barrier_area_entered(area: CollisionObject2D) -> void:
 	var layer = area.collision_layer
 	if layer & (1 << Common.eColLayer.BULLET):
 		# 敵弾であれば消す.
 		area.vanish()
-		# ショットを発生させる.
-		var parent = Common.get_layer("shot")
-		var s = SHOT_OBJ.instance()
-		s.position = area.position
-		s.set_velocity(area.get_velocity())
-		parent.add_child(s)

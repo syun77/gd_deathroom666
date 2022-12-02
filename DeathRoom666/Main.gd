@@ -58,7 +58,7 @@ var _camera_shake_position = Vector2.ZERO
 # private functions.
 # ------------------------------------------
 func _ready() -> void:
-	#OS.set_window_size(Vector2(160, 300))
+	OS.set_window_size(Vector2(160, 300))
 	
 	_enemy.set_target(_player)
 	_enemy.set_camera(_camera)
@@ -168,8 +168,9 @@ func _update_camera() -> void:
 	
 ## ブロックの出現.
 func _check_block() -> void:
-	var prev = int(_timer_prev)
-	var next = int(_timer)
+	var interval = 1.0
+	var prev = int(_timer_prev * interval)
+	var next = int(_timer * interval)
 	if prev != next:
 		_appear_block()
 	_timer_prev = _timer
