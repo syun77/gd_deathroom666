@@ -317,10 +317,11 @@ func _update_camera_shake(delta:float) -> void:
 
 ## 敵の出現チェック.
 func _check_appear_enemy(next:int, next_y:float) -> void:
-	if _enemy_rank == 0 and next < -2:
-		# 最初の敵が出現.
-		_enemy_rank += 1
-		_appear_enemy(next_y)
+	if _enemy_rank == 0:
+		if next < -2:
+			# 最初の敵が出現.
+			_enemy_rank += 1
+			_appear_enemy(next_y)
 		return
 	
 	if is_instance_valid(_enemy):
@@ -329,8 +330,8 @@ func _check_appear_enemy(next:int, next_y:float) -> void:
 		return
 	
 	# 存在しないので出現させる.	
-	if next < _enemy_pos_y - 5:
-		# 前回よりも5つ以上進むと次の敵が出現する.
+	if next < _enemy_pos_y - 16:
+		# 前回よりも16以上進むと次の敵が出現する.
 		_enemy_rank += 1
 		_appear_enemy(next_y)
 

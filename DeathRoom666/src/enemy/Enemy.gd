@@ -58,6 +58,7 @@ func set_bullets(bullets:CanvasLayer) -> void:
 func setup(rank:int):
 	_id = rank
 	init_hp(5)
+	_spr.frame = (rank-1) % 3
 
 ## HPの初期化.
 func init_hp(v:int) -> void:
@@ -120,11 +121,12 @@ func _update_dead() -> void:
 	
 func _start_dead() -> void:
 	_state = eState.DEAD
-	_timer = TIMER_DEAD
+	_timer = TIMER_DEAD * rand_range(0.7, 1.5)
 	if position.x < Common.SCREEN_W/2:
 		_velocity.x = 1000
 	else:
 		_velocity.x = -1000
+	_velocity.y = -500
 
 func _set_velocity(deg:float, speed:float) -> void:
 	var rad = deg2rad(deg)
@@ -179,7 +181,7 @@ func _move_and_bullet(delta) -> void:
 		_bullet(aim+2, 300)
 
 	# 画像の回転.
-	_spr.rotation_degrees = _get_aim2()
+	_spr.rotation_degrees = _get_aim2() - 90
 	
 ## 弾を撃つ.
 func _bullet(deg:float, speed:float, ofs:Vector2 = Vector2.ZERO) -> void:
