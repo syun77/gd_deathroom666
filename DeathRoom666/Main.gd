@@ -57,6 +57,7 @@ onready var _ui_gameover = $UILayer/Gameover
 onready var _ui_caption = $UILayer/Gameover/LabelCaption
 onready var _healthBar = $UILayer/ProgressBar
 onready var _labelRank = $UILayer/LabelRank
+onready var _bgm = $AudioBgm
 
 # ------------------------------------------
 # vars.
@@ -72,6 +73,9 @@ var _camera_x_prev = 0.0
 var _camera_shake_type = eCameraShake.DISABLE
 var _camera_shake_position = Vector2.ZERO
 var _camera_shake_timer = 0.0
+
+var _now_bgm:int = 0
+var _next_bgm:int = 0
 
 # ------------------------------------------
 # private functions.
@@ -89,7 +93,12 @@ func _ready() -> void:
 		"bullet": _bullet_layer,
 		"effect": _effect_layer,
 	}
-	Common.setup(layers)
+	Common.setup(self, layers)
+	
+	_change_bgm(1)
+
+func _change_bgm(id:int) -> void:
+	_next_bgm = id
 
 ## ランダムに足場を作る
 func _create_random_floor():
@@ -117,6 +126,9 @@ func _process(delta: float) -> void:
 
 	# カメラ揺れの更新.
 	_update_camera_shake(delta)
+	
+	# BGM変更のチェック.
+	_update_bgm()
 
 ## 更新 > メイン.
 func _update_main(delta:float) -> void:
@@ -125,6 +137,7 @@ func _update_main(delta:float) -> void:
 	if is_instance_valid(_player) == false or _player.is_request_dead():
 		_state = eState.HIT_STOP
 		_timer = TIMER_HIT_STOP
+		_bgm.stop()
 		_enter_hit_stop()
 		return
 		
@@ -374,6 +387,10 @@ func _check_appear_enemy(next:int, next_y:float) -> void:
 	if next < _enemy_pos_y - 16:
 		# 前回よりも16以上進むと次の敵が出現する.
 		_enemy_rank += 1
+		
+		if _enemy_rank <= MAX_RANK:
+			# BGM変更
+			_change_bgm(_enemy_rank)
 		_appear_enemy(next_y)
 
 ## 敵の初期化.
@@ -393,6 +410,22 @@ func _appear_enemy(next_y:float) -> void:
 	_enemy_layer.add_child(_enemy)
 	# セットアップ.
 	_enemy.setup(_enemy_rank)
+
+func _update_bgm():
+	if _now_bgm != _next_bgm:
+		var _can_change = true
+		if _bgm.playing:
+			var pos = _bgm.get_playback_position()
+			var measure = 13.01 / 8 # 13.01秒 / 8小節.
+			var d = fmod(pos, measure)
+			if 0.1 < d and d < measure - 0.1:
+				_can_change = false
+		if _can_change:
+			# BGM変更.
+			_now_bgm = _next_bgm
+			_bgm.stream = load("res://assets/sound/stage%d.mp3"%_now_bgm)
+			_bgm.play()
+
 
 # ------------------------------------------
 # debug functions.

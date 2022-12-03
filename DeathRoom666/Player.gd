@@ -57,6 +57,8 @@ onready var _spr_normal = $Player
 onready var _spr_front_flip = $PlayerFrontFlip
 onready var _spr = $Player
 onready var _barrier = $Barrier
+onready var _audio_jump = $AudioJump
+onready var _auiod_beam = $AudioBeam
 
 # ------------------------------------
 # メンバ変数.
@@ -91,6 +93,8 @@ func vanish() -> void:
 	# 更新を止める.
 	set_process(false)
 	set_physics_process(false)
+	
+	Common.play_se("damage")
 
 ## 死亡リクエストがあるかどうか.
 func is_request_dead() -> bool:
@@ -124,6 +128,7 @@ func _physics_process(delta: float) -> void:
 		# 死亡リクエストが届いた.
 		Common.start_particle(position, 1.0, Color.magenta)
 		Common.start_particle_ring(position, 1.0, Color.magenta, 4.0)
+		Common.play_se("explosion")
 		queue_free()
 		
 	# 重力を加算
@@ -158,6 +163,7 @@ func _physics_process(delta: float) -> void:
 	if _cnt_jump < MAX_JUMP_CNT:
 		if Input.is_action_just_pressed("act_jump"):
 			# ジャンプできる.
+			_audio_jump.play()
 			_jump_state = eJumpState.JUMP
 			_velocity.y = -JUMP_POWER
 			_cnt_jump += 1
@@ -334,6 +340,7 @@ func _shoot(cnt:int) -> void:
 		s.position = position
 		s.set_velocity(v)
 		parent.add_child(s)
+	_auiod_beam.play()
 
 ## バリアに何かが衝突.
 func _on_Barrier_area_entered(area: CollisionObject2D) -> void:

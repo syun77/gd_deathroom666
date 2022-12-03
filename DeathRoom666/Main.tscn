@@ -219,3 +219,5 @@ margin_right = 130.0
 margin_bottom = 34.0
 theme = ExtResource( 3 )
 text = "RANK: 999"
+
+[node name="AudioBgm" type="AudioStreamPlayer" parent="."]

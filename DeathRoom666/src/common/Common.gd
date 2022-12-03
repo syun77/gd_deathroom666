@@ -30,11 +30,20 @@ enum eColLayer {
 #-----------------------------------
 var _layers = []
 
+var _snd:AudioStreamPlayer
+var _snd_tbl = {
+	"damage": "res://assets/sound/damage.wav",
+	"explosion" : "res://assets/sound/explosion.wav",
+}
+
 #-----------------------------------
 # public functions.
 #-----------------------------------
-func setup(layers) -> void:
+func setup(root, layers) -> void:
 	_layers = layers
+	_snd = AudioStreamPlayer.new()
+	_snd.volume_db = -4
+	root.add_child(_snd)
 	
 func get_layer(name:String) -> CanvasLayer:
 	return _layers[name]
@@ -64,3 +73,11 @@ func start_particle_enemy(pos:Vector2, time:float, color:Color) -> void:
 	start_particle(pos, time, color, 2.0)
 	for i in range(3):
 		start_particle_ring(pos, time + (i * 0.2), color, pow(2.0, (1 + i)))
+
+func play_se(name:String) -> void:
+	if not name in _snd_tbl:
+		push_error("存在しないサウンド %s"%name)
+		return
+	
+	_snd.stream = load(_snd_tbl[name])
+	_snd.play()

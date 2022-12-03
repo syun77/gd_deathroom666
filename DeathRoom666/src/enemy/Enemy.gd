@@ -24,9 +24,10 @@ enum eState {
 # --------------------------------
 
 # --------------------------------
-# exports.
+# onready.
 # --------------------------------
 onready var _spr = $Enemy
+onready var _audioHit = $AudioHit
 
 # --------------------------------
 # vars.
@@ -70,7 +71,8 @@ func damage(v:int) -> void:
 	if _state != eState.MAIN:
 		# メイン状態でなければ何もしない.
 		return
-		
+	
+	_audioHit.play()
 	_hp -= v
 	if _hp <= 0:
 		_hp = 0
@@ -80,6 +82,7 @@ func damage(v:int) -> void:
 ## 消滅.
 func vanish() -> void:
 	Common.start_particle_enemy(position, 1, Color.white)
+	Common.play_se("explosion")
 	queue_free()
 
 ## HPの割合を取得する.
@@ -158,6 +161,8 @@ func _process(delta: float) -> void:
 		eState.MAIN:
 			_move_and_bullet(delta)
 		eState.DEAD:
+			if _audioHit.playing == false:
+				_audioHit.play()
 			Common.start_particle(position, 0.5, Color.white)
 			_spr.rotation_degrees += 500 * delta
 			_timer -= delta

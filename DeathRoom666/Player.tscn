@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/images/player.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
 [ext_resource path="res://assets/images/barrier.png" type="Texture" id=3]
+[ext_resource path="res://assets/sound/jump.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/sound/beam.wav" type="AudioStream" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 14.5, 19.5 )
@@ -46,5 +48,13 @@ texture = ExtResource( 3 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Barrier"]
 position = Vector2( 0, -21 )
 shape = SubResource( 2 )
+
+[node name="AudioBeam" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -4.37
+
+[node name="AudioJump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -4.37
 
 [connection signal="area_entered" from="Barrier" to="." method="_on_Barrier_area_entered"]
