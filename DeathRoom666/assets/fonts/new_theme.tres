@@ -4,8 +4,7 @@
 font_path = "res://assets/fonts/mplus-1c-regular.ttf"
 
 [sub_resource type="DynamicFont" id=2]
-size = 32
-outline_size = 1
+outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = SubResource( 1 )
 
