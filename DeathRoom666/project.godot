@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://src/enemy/Enemy.gd"
+}, {
 "base": "Sprite",
 "class": "Particle",
 "language": "GDScript",
 "path": "res://src/effects/Particle.gd"
 } ]
 _global_script_class_icons={
+"Enemy": "",
 "Particle": ""
 }
 

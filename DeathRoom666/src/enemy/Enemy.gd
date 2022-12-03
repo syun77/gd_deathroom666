@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+class_name Enemy
 # --------------------------------
 # preload.
 # --------------------------------
@@ -39,6 +40,7 @@ var _bullets:CanvasLayer = null
 var _hp:int = 10
 var _hp_max:int = 10
 var _state = eState.MAIN
+var _id:int = 0
 
 # --------------------------------
 # public functions.
@@ -52,6 +54,10 @@ func set_target(target:Node2D) -> void:
 	_target = target
 func set_bullets(bullets:CanvasLayer) -> void:
 	_bullets = bullets
+	
+func setup(rank:int):
+	_id = rank
+	init_hp(5)
 
 ## HPの初期化.
 func init_hp(v:int) -> void:
