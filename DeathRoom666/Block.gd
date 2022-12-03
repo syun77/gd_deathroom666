@@ -45,6 +45,9 @@ func freeze() -> bool:
 	wall.position = position
 	_parent.add_child(wall)
 	
+	# リングエフェクト出現.
+	Common.start_particle_ring(position, 1.0, Color.white)
+	
 	return true
 
 ## 親ノードを設定する.

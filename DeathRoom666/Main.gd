@@ -6,6 +6,7 @@ extends Node2D
 const Wall = preload("res://Wall.tscn")
 const Block = preload("res://Block.tscn")
 const Floor = preload("res://Floor.tscn")
+const Enemy = preload("res://src/enemy/Enemy.tscn")
 
 # ------------------------------------------
 # 定数.
@@ -16,7 +17,7 @@ const _DEBUG = false
 # カメラのスクロールオフセット.
 const SCROLL_OFFSET_Y = 100.0
 # 画面外のオフセット.
-const OUTSIDE_OFFSET_Y = 500.0
+const OUTSIDE_OFFSET_Y = 450.0
 const DBG_OUTSIDE_OFFSET_Y = 550.0
 # タイマー関連.
 const TIMER_HIT_STOP = 0.5 # ヒットストップ.
@@ -42,7 +43,7 @@ onready var _shot_layer = $ShotLayer
 onready var _bullet_layer = $BulletLayer
 onready var _effect_layer = $EffectLayerFront
 onready var _labelScore = $UILayer/LabelScore
-onready var _labelCaption = $UILayer/LabelCaption
+onready var _ui_gameover = $UILayer/Gameover
 onready var _healthBar = $UILayer/ProgressBar
 
 # ------------------------------------------
@@ -61,9 +62,7 @@ var _camera_shake_position = Vector2.ZERO
 func _ready() -> void:
 	#OS.set_window_size(Vector2(160, 300))
 	
-	_enemy.set_target(_player)
-	_enemy.set_camera(_camera)
-	_enemy.set_bullets(_bullet_layer)
+	_init_enemy(_enemy)
 	
 	# ランダムに足場を作る
 	_create_random_floor()
@@ -141,7 +140,7 @@ func _update_gameover(delta:float) -> void:
 		_timer -= delta
 		return
 
-	_labelCaption.visible = true	
+	_ui_gameover.visible = true	
 	_camera.position = _camera_shake_position
 	
 	if Input.is_action_just_pressed("act_jump"):
@@ -160,13 +159,27 @@ func _update_camera() -> void:
 		
 		# 横壁を作る.
 		if prev != next:
+			var next_y = next * Common.TILE_SIZE - 424 + 12
 			for x in [Common.TILE_HALF, 480.0 - Common.TILE_HALF]:
 				var wall = Wall.instance()
 				wall.position.x = x
-				wall.position.y = next * Common.TILE_SIZE - 424 + 12
+				wall.position.y = next_y
 				_block_layer.add_child(wall)
+				
+			# ランダムで足場も作っておきます.
+			if randi()%3 == 0:
+				_random_floor(next_y)
+			
 		_camera_x_prev = target_y
 	
+## ランダムで足場を作る
+func _random_floor(next_y:float) -> void:
+	var idx = randi()%(8-5) + 1
+	for j in range(2):
+		var floor_obj = Floor.instance()
+		floor_obj.position.x = _block_x(idx+j)
+		floor_obj.position.y = next_y
+		_block_layer.add_child(floor_obj)
 	
 ## ブロックの出現.
 func _check_block() -> void:
@@ -234,8 +247,10 @@ func _check_outside() -> void:
 ## 敵HPバーの更新.
 func _update_enemy_hp() -> void:
 	if is_instance_valid(_enemy) == false:
+		_healthBar.visible = false # ゲージを消します
 		return
 	
+	_healthBar.visible = true # ゲージを出現させます.
 	var rate = _enemy.hpratio()
 	_healthBar.value = 100 * rate
 
@@ -261,6 +276,13 @@ func _set_process_all_objects(b:bool) -> void:
 		wall.set_physics_process(b)
 	for bullet in _bullet_layer.get_children():
 		bullet.set_process(b)
+
+## 敵の初期化.
+func _init_enemy(enemy) -> void:
+	_enemy.set_target(_player)
+	_enemy.set_camera(_camera)
+	_enemy.set_bullets(_bullet_layer)
+
 
 # ------------------------------------------
 # debug functions.

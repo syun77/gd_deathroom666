@@ -40,7 +40,7 @@ func get_velocity() -> Vector2:
 
 ## 消滅する
 func vanish() -> void:
-	Common.start_particle(position, 1.0, Color.white)
+	Common.start_particle(position, 1.0, Color.aqua)
 	queue_free()
 
 # ------------------------------------

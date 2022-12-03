@@ -186,11 +186,19 @@ margin_bottom = 848.0
 theme = ExtResource( 3 )
 text = "SCORE: 123456"
 
-[node name="LabelCaption" type="Label" parent="UILayer"]
+[node name="Gameover" type="Node2D" parent="UILayer"]
 visible = false
-margin_top = 352.0
+position = Vector2( 0, 360 )
+
+[node name="ColorRect" type="ColorRect" parent="UILayer/Gameover"]
 margin_right = 480.0
-margin_bottom = 416.0
+margin_bottom = 48.0
+color = Color( 0, 0, 0, 0.309804 )
+
+[node name="LabelCaption" type="Label" parent="UILayer/Gameover"]
+margin_top = -8.0
+margin_right = 480.0
+margin_bottom = 56.0
 theme = ExtResource( 3 )
 text = "GAME OVER"
 align = 1

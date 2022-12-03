@@ -17,12 +17,12 @@ func get_velocity() -> Vector2:
 
 ## 弾を消す.
 func vanish() -> void:
-	Common.start_particle(position, 1.0, Color.white)
+	Common.start_particle(position, 1.0, Color.red)
 	
 	queue_free()
 
 func _ready() -> void:
-	pass
+	_spr.modulate = Color.red
 
 func _process(delta: float) -> void:
 	position += _velocity * delta;

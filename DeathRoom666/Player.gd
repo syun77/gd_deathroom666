@@ -122,6 +122,8 @@ func _enable_barrier(b:bool) -> void:
 func _physics_process(delta: float) -> void:
 	if _request_dead:
 		# 死亡リクエストが届いた.
+		Common.start_particle(position, 1.0, Color.magenta)
+		Common.start_particle_ring(position, 1.0, Color.magenta, 4.0)
 		queue_free()
 		
 	# 重力を加算
@@ -316,6 +318,10 @@ func _is_front_flip() -> bool:
 	return true
 
 func _shoot(cnt:int) -> void:
+	var enemies = Common.get_layer("enemy")
+	if enemies.get_child_count() == 0:
+		return # 敵がいない場合は発生しない.
+	
 	var v := Vector2()
 	# ショットを発生させる.
 	for i in range(cnt):

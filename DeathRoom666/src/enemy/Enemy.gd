@@ -10,6 +10,13 @@ const Bullet = preload("res://src/bullet/Bullet.tscn")
 # --------------------------------
 const MOVE_DECAY = 0.97 # 移動量の減衰値.
 const CAMERA_OFFSET_Y = -350.0
+const GRAVITY = 30
+const TIMER_DEAD = 0.5
+
+enum eState {
+	MAIN,
+	DEAD, # 死亡演出中.
+}
 
 # --------------------------------
 # exports.
@@ -31,10 +38,14 @@ var _target_last_position = Vector2.ZERO
 var _bullets:CanvasLayer = null
 var _hp:int = 10
 var _hp_max:int = 10
+var _state = eState.MAIN
 
 # --------------------------------
 # public functions.
 # --------------------------------
+func is_alive() -> bool:
+	return _state == eState.MAIN
+	
 func set_camera(camera:Camera2D) -> void:
 	_camera = camera
 func set_target(target:Node2D) -> void:
@@ -49,9 +60,20 @@ func init_hp(v:int) -> void:
 
 ## HPを減らす.
 func damage(v:int) -> void:
+	if _state != eState.MAIN:
+		# メイン状態でなければ何もしない.
+		return
+		
 	_hp -= v
-	if _hp < 0:
+	if _hp <= 0:
 		_hp = 0
+		# 死亡処理の開始.
+		_start_dead()
+		
+## 消滅.
+func vanish() -> void:
+	Common.start_particle_enemy(position, 1, Color.white)
+	queue_free()
 
 ## HPの割合を取得する.
 func hpratio() -> float:
@@ -61,16 +83,42 @@ func hpratio() -> float:
 # private functions.
 # --------------------------------
 func _ready() -> void:
-	pass
+	init_hp(1)
 
-func _physics_process(delta: float) -> void:
+## 物理システムの更新.
+func _physics_process(_delta: float) -> void:
+	match _state:
+		eState.MAIN:
+			_update_main()
+		eState.DEAD:
+			_update_dead()
+
+## 更新 > メイン.
+func _update_main() -> void:
 	_velocity *= MOVE_DECAY
 	
 	# カメラが移動したらそれに合わせて移動する.
 	var dy = (_camera.position.y + CAMERA_OFFSET_Y) - position.y
 	_velocity.y = dy * 2
 	
+	# deltaは内部でやってくれる.
 	_velocity = move_and_slide(_velocity)
+
+## 更新 > 死亡演出.
+func _update_dead() -> void:
+	_velocity.y += GRAVITY
+	_velocity *= MOVE_DECAY
+	
+	# deltaは内部でやってくれる.
+	_velocity = move_and_slide(_velocity)
+	
+func _start_dead() -> void:
+	_state = eState.DEAD
+	_timer = TIMER_DEAD
+	if position.x < Common.SCREEN_W/2:
+		_velocity.x = 1000
+	else:
+		_velocity.x = -1000
 
 func _set_velocity(deg:float, speed:float) -> void:
 	var rad = deg2rad(deg)
@@ -98,6 +146,18 @@ func _get_aim2() -> float:
 	return rad2deg(atan2(d.y, d.x))
 
 func _process(delta: float) -> void:
+	match _state:
+		eState.MAIN:
+			_move_and_bullet(delta)
+		eState.DEAD:
+			Common.start_particle(position, 0.5, Color.white)
+			_spr.rotation_degrees += 500 * delta
+			_timer -= delta
+			if _timer < 0:
+				# 消滅.
+				vanish()
+
+func _move_and_bullet(delta) -> void:			
 	var prev = int(_timer * 0.5)
 	_timer += delta
 	var next = int(_timer * 0.5)
