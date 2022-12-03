@@ -214,6 +214,8 @@ func _check_outside() -> void:
 			block.queue_free()
 	
 	for shot in _shot_layer.get_children():
+		if not shot is Area2D:
+			continue # shotはArea2Dのみ
 		var py = shot.position.y
 		if py < outside_top_y or py > outside_y:
 			# 画面外なので消す.

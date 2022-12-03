@@ -10,6 +10,7 @@ extends Area2D
 # ------------------------------------
 # onready.
 # ------------------------------------
+onready var _line = $Line2D
 
 # ------------------------------------
 # vars.
@@ -82,11 +83,28 @@ func _process(delta: float) -> void:
 	
 	var v = get_velocity()
 	
-	position += v * delta
+	# 移動量.
+	var d = v * delta
+	position += d
+	
+	# line2Dの更新.
+	# positionに追従してしまうので逆オフセットが必要となる.
+	for i in range(_line.points.size()):
+		_line.points[i] -= d # すべてのLine2Dの位置を移動量で逆オフセットする.
+	_line.points[0] = Vector2.ZERO # 先頭は0でよい.
+	_update_line2d()
 	
 	# ****************************
 	# 画面外判定はMain.gd でやります.
 	# ****************************
+
+## Line2Dの座標を更新する
+func _update_line2d() -> void:
+	for i in range(_line.points.size()-1):
+		var a = _line.points[i]
+		var b = _line.points[i+1]
+		# 0.5の重みで線形補間します
+		_line.points[i+1] = b.linear_interpolate(a, 0.5)
 
 ## 角度差を求める.
 func _diff_angle(now:float, next:float) -> float:

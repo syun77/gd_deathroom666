@@ -319,8 +319,8 @@ func _shoot(cnt:int) -> void:
 	var v := Vector2()
 	# ショットを発生させる.
 	for i in range(cnt):
-		var spd = rand_range(100, 500)
-		var rad = deg2rad(270 + rand_range(-30, 30))
+		var spd = rand_range(300, 800)
+		var rad = deg2rad(270 + rand_range(-50, 50))
 		v.x = cos(rad) * spd
 		v.y = -sin(rad) * spd
 		var parent = Common.get_layer("shot")
