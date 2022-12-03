@@ -22,12 +22,16 @@ const DBG_OUTSIDE_OFFSET_Y = 550.0
 # タイマー関連.
 const TIMER_HIT_STOP = 0.5 # ヒットストップ.
 const TIMER_SHAKE = 0.5 # カメラ揺れ時間.
+const TIMER_GAME_CLEAR = 1.0
+
+const MAX_RANK = 5
 
 # 状態 .
 enum eState {
 	MAIN, # メイン.
 	HIT_STOP, # ダメージストップ.
 	GAMEOVER, # ゲームオーバー.
+	GAMECLEAR, # ゲームクリア.
 }
 
 # カメラ揺らし種別.
@@ -50,7 +54,9 @@ onready var _bullet_layer = $BulletLayer
 onready var _effect_layer = $EffectLayerFront
 onready var _labelScore = $UILayer/LabelScore
 onready var _ui_gameover = $UILayer/Gameover
+onready var _ui_caption = $UILayer/Gameover/LabelCaption
 onready var _healthBar = $UILayer/ProgressBar
+onready var _labelRank = $UILayer/LabelRank
 
 # ------------------------------------------
 # vars.
@@ -106,6 +112,8 @@ func _process(delta: float) -> void:
 			_update_hit_stop(delta)
 		eState.GAMEOVER:
 			_update_gameover(delta)
+		eState.GAMECLEAR:
+			_update_gameclear(delta)
 
 	# カメラ揺れの更新.
 	_update_camera_shake(delta)
@@ -125,6 +133,19 @@ func _update_main(delta:float) -> void:
 	_check_block()
 	_check_outside()
 	_update_enemy_hp()
+	
+	# ランク数値の表示
+	if _enemy_rank == 0:
+		_labelRank.text = "Z / Space: ジャンプ\n空中でジャンプすると2段ジャンプ" # ランク0の場合はチュートリアルを表示する.
+	else:
+		_labelRank.text = "RANK: %d / %d"%[_enemy_rank, MAX_RANK]
+	
+	# ゲームクリア判定.
+	if _enemy_rank >= MAX_RANK and is_instance_valid(_enemy):
+		if _enemy.is_alive() == false:
+			_enter_hit_stop()
+			_timer = TIMER_GAME_CLEAR
+			_state = eState.GAMECLEAR
 
 ## 更新 > ヒットストップ.
 func _update_hit_stop(delta:float) -> void:
@@ -144,6 +165,19 @@ func _update_hit_stop(delta:float) -> void:
 func _update_gameover(delta:float) -> void:
 	_ui_gameover.visible = true	
 	_camera.position = _camera_shake_position
+	
+	if Input.is_action_just_pressed("act_jump"):
+		# リスタート.
+		get_tree().change_scene("res://Main.tscn")
+
+## 更新 > ゲームクリア.
+func _update_gameclear(delta:float) -> void:
+	_ui_gameover.visible = true
+	_ui_caption.text = "COMPLETED!!"
+	
+	_timer -= delta
+	if _timer > 0:
+		return
 	
 	if Input.is_action_just_pressed("act_jump"):
 		# リスタート.
@@ -252,10 +286,15 @@ func _check_outside() -> void:
 ## 敵HPバーの更新.
 func _update_enemy_hp() -> void:
 	if is_instance_valid(_enemy) == false:
+		if _healthBar.visible:
+			# 敵が死亡したのでカメラを揺らす.
+			_start_camera_shake(eCameraShake.VANISH_ENEMY)
 		_healthBar.visible = false # ゲージを消します
+		_labelRank.visible = true # 代わりにランクを表示します
 		return
 	
 	_healthBar.visible = true # ゲージを出現させます.
+	_labelRank.visible = false # ランクを消します.
 	var rate = _enemy.hpratio()
 	_healthBar.value = 100 * rate
 
@@ -268,9 +307,6 @@ func _enter_hit_stop():
 func _enter_gameover():	
 	# カメラ揺らし開始.
 	_start_camera_shake(eCameraShake.GAMEOVER)
-	
-	# スムージングを無効化.
-	_camera.smoothing_enabled = false
 
 ## カメラ揺らしの開始.
 func _start_camera_shake(type:int) -> void:
@@ -278,6 +314,9 @@ func _start_camera_shake(type:int) -> void:
 	_camera_shake_type = type
 	_camera_shake_position = _camera.position
 	_camera_shake_timer = TIMER_SHAKE
+		
+	# スムージングを無効化.
+	_camera.smoothing_enabled = false
 
 func _set_process_all_objects(b:bool) -> void:
 	for obj in _main_layer.get_children():
@@ -300,8 +339,8 @@ func _update_camera_shake(delta:float) -> void:
 	
 	match _camera_shake_type:
 		eCameraShake.VANISH_ENEMY:
-			w = 32
-			h = 8
+			w = 48
+			h = 12
 		eCameraShake.GAMEOVER:
 			w = 64
 			h = 16
@@ -313,6 +352,8 @@ func _update_camera_shake(delta:float) -> void:
 	_camera_shake_timer -= delta
 	if _camera_shake_timer <= 0.0:
 		# 揺れ終了.
+		# スムージングを有効化.
+		_camera.smoothing_enabled = true
 		_camera_shake_type = eCameraShake.DISABLE
 
 ## 敵の出現チェック.

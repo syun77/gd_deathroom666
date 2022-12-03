@@ -201,6 +201,7 @@ align = 1
 valign = 1
 
 [node name="ProgressBar" type="TextureProgress" parent="UILayer"]
+visible = false
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -208.0
@@ -210,3 +211,11 @@ theme = ExtResource( 3 )
 value = 50.0
 texture_under = ExtResource( 6 )
 texture_progress = ExtResource( 7 )
+
+[node name="LabelRank" type="Label" parent="UILayer"]
+visible = false
+margin_left = 8.0
+margin_right = 130.0
+margin_bottom = 34.0
+theme = ExtResource( 3 )
+text = "RANK: 999"
