@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/images/spike2.png" type="Texture" id=1]
+[ext_resource path="res://src/spike2/Spike2.gd" type="Script" id=2]
+
+[sub_resource type="PhysicsMaterial" id=2]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="CircleShape2D" id=1]
+
+[node name="Spike2" type="RigidBody2D"]
+collision_layer = 4
+collision_mask = 3
+physics_material_override = SubResource( 2 )
+gravity_scale = 0.0
+contacts_reported = 10
+contact_monitor = true
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[connection signal="body_entered" from="." to="." method="_on_Spike2_body_entered"]

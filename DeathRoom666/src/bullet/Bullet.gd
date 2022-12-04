@@ -48,10 +48,6 @@ func _on_Bullet_body_entered(body: CollisionObject2D) -> void:
 			break
 	if is_find == false:
 		return
-		
-	if layer & (1 << Common.eColLayer.WALL):
-		if not "Wall" in body.name:
-			return # "Wall" 以外は衝突しないことにします
 
 	if layer & (1 << Common.eColLayer.PLAYER):
 		# プレイヤーの場合は消滅処理を呼び出す.

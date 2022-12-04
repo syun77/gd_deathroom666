@@ -5,7 +5,8 @@ class_name Enemy
 # --------------------------------
 # preload.
 # --------------------------------
-const Bullet = preload("res://src/bullet/Bullet.tscn")
+const BulletObj = preload("res://src/bullet/Bullet.tscn")
+const Spike2Obj = preload("res://src/spike2/Spike2.tscn")
 
 # --------------------------------
 # 定数.
@@ -49,7 +50,7 @@ class DelayedBatteryInfo:
 	var delay:float = 0
 	var ax:float = 0
 	var ay:float = 0
-	func _init(_deg:float, _speed:float, _delay:float, _ax:float, _ay:float) -> void:
+	func _init(_deg:float, _speed:float, _delay:float, _ax:float=0.0, _ay:float=0.0) -> void:
 		deg = _deg
 		speed = _speed
 		delay = _delay
@@ -250,7 +251,7 @@ func _bullet(deg:float, speed:float, delay:float=0, ax:float=0, ay:float=0) -> v
 		return
 	
 	# 発射する.
-	var b = Bullet.instance()
+	var b = BulletObj.instance()
 	b.position = position
 	b.set_velocity(deg, speed)
 	b.set_accel(ax, ay)
@@ -292,6 +293,14 @@ func _update_batteies(delta:float) -> void:
 	
 	_batteries = tmp
 
+## Spikeを発射する.
+func _shoot_spike(deg:float, power:float) -> void:
+	var spike = Spike2Obj.instance()
+	spike.position = position
+	spike.set_velocity(deg, power)
+	_bullets.add_child(spike)
+
+## 敵のAI (ナス)
 func _ai_1(aim:float) -> void:
 	
 	if _cnt%120 == 0:
@@ -305,12 +314,9 @@ func _ai_1(aim:float) -> void:
 		return
 	else:
 		_nway(3, aim, 5, 100)	
-	
-func _ai_2(aim:float) -> void:
-	
-	_label.visible = true
-	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
 
+## 敵のAI (たこ焼き)
+func _ai_2(aim:float) -> void:
 	if _cnt%120 == 0:
 		# 2秒間隔で行動する.
 		_interval += 1
@@ -335,17 +341,38 @@ func _ai_2(aim:float) -> void:
 					_bullet(deg, 300, 0.1*i, 0.0, 5)
 					
 			_interval = 0 # 最初からやり直す.
+
+## 敵のAI (牛乳)
+func _ai_3(aim:float) -> void:	
+	if _cnt%120 == 0:
+		# 2秒間隔で行動する.
+		_interval += 1
+	else:
+		return
 	
-func _ai_3(aim:float) -> void:
-	if _cnt%60 == 0:
-		for i in range(3):
-			_nway(3, aim, 5, 100 + 20 * i, 0.02 * i)
+	match _interval%10:
+		1, 5:
+			_shoot_spike(aim-45, 300)
+			_shoot_spike(aim+45, 300)
+		2:
+			_shoot_spike(aim-5, 100)
+			_shoot_spike(aim,   100)
+			_shoot_spike(aim+5, 100)
+		9:
+			_shoot_spike(aim-60, 300)
+			_shoot_spike(aim+60, 300)
 	
+
+## 敵のAI (プリン)	
 func _ai_4(aim:float) -> void:
+	_label.visible = true
+	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
+		
 	if _cnt%60 == 0:
 		for i in range(3):
 			_nway(3, aim, 5, 100 + 20 * i, 0.02 * i)
-			
+
+## 敵のAI (Xbox)
 func _ai_5(aim:float) -> void:
 	if _cnt%60 == 0:
 		for i in range(3):

@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "Particle",
 "language": "GDScript",
 "path": "res://src/effects/Particle.gd"
+}, {
+"base": "RigidBody2D",
+"class": "Spike2",
+"language": "GDScript",
+"path": "res://src/spike2/Spike2.gd"
 } ]
 _global_script_class_icons={
 "Block": "",
 "Enemy": "",
-"Particle": ""
+"Particle": "",
+"Spike2": ""
 }
 
 [application]
@@ -109,6 +115,7 @@ ui_reset={
 2d_physics/layer_6="Bullet"
 2d_physics/layer_7="Shot"
 2d_physics/layer_8="Barrier"
+2d_physics/layer_9="Floor"
 
 [physics]
 

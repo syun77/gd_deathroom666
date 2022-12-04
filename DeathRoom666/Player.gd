@@ -199,6 +199,7 @@ func _on_floor() -> void:
 
 ## 衝突チェックする.
 func _check_collision():
+	
 	# 衝突対象を取得する.
 	for i in range(get_slide_count()):
 		var col:KinematicCollision2D = get_slide_collision(i)

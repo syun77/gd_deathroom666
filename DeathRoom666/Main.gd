@@ -13,8 +13,8 @@ const EnemyObj = preload("res://src/enemy/Enemy.tscn")
 # ------------------------------------------
 # デバッグフラグ.
 const _DEBUG = false
-const _DEBUG_ENEMY = true # 敵をすぐに出現させる.
-const _DEBUG_ENEMY_RANK = 2 # デバッグ時の初期敵ランク.
+const _DEBUG_ENEMY = false # 敵をすぐに出現させる.
+const _DEBUG_ENEMY_RANK = 3 # デバッグ時の初期敵ランク.
 
 # カメラのスクロールオフセット.
 const SCROLL_OFFSET_Y = 100.0
@@ -126,8 +126,12 @@ func _process(delta: float) -> void:
 		eState.GAMECLEAR:
 			_update_gameclear(delta)
 
+	# 画面外のオブジェクトを消す.
+	_check_outside()
+	
 	# カメラ揺れの更新.
 	_update_camera_shake(delta)
+	
 	
 	# BGM変更のチェック.
 	_update_bgm()
@@ -146,7 +150,6 @@ func _update_main(delta:float) -> void:
 	_timer += delta
 	_update_camera()	
 	_check_block()
-	_check_outside()
 	_update_enemy_hp()
 	
 	# ランク数値の表示
@@ -295,8 +298,9 @@ func _check_outside() -> void:
 			bullet.queue_free()
 	
 	# プレイヤー死亡判定.
-	if _player.position.y > outside_y:
-		_player.vanish()
+	if _state == eState.MAIN:
+		if _player.position.y > outside_y:
+			_player.vanish()
 
 ## 敵HPバーの更新.
 func _update_enemy_hp() -> void:
@@ -349,6 +353,7 @@ func _set_process_all_objects(b:bool) -> void:
 		wall.set_physics_process(b)
 	for bullet in _bullet_layer.get_children():
 		bullet.set_process(b)
+		bullet.set_physics_process(b)
 
 ## 更新 > カメラ揺らし
 func _update_camera_shake(delta:float) -> void:
@@ -451,6 +456,7 @@ func _debug() -> void:
 	if Input.is_action_just_pressed("ui_reset"):
 		get_tree().change_scene("res://Main.tscn")
 
+	_labelScore.text = "Wall:%d Shot:%d Bullet:%d"%[_block_layer.get_child_count(), _shot_layer.get_child_count(), _bullet_layer.get_child_count()]
 	if _DEBUG:
 		if is_instance_valid(_player):
 			# 画面外ジャンプ.
