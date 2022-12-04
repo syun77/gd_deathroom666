@@ -3,9 +3,9 @@ extends Node2D
 # ------------------------------------------
 # preload.
 # ------------------------------------------
-const Wall = preload("res://Wall.tscn")
-const Block = preload("res://Block.tscn")
-const Floor = preload("res://Floor.tscn")
+const WallObj = preload("res://Wall.tscn")
+const BlockObj = preload("res://Block.tscn")
+const FloorObj = preload("res://Floor.tscn")
 const EnemyObj = preload("res://src/enemy/Enemy.tscn")
 
 # ------------------------------------------
@@ -13,6 +13,8 @@ const EnemyObj = preload("res://src/enemy/Enemy.tscn")
 # ------------------------------------------
 # デバッグフラグ.
 const _DEBUG = false
+const _DEBUG_ENEMY = true # 敵をすぐに出現させる.
+const _DEBUG_ENEMY_RANK = 1 # デバッグ時の初期敵ランク.
 
 # カメラのスクロールオフセット.
 const SCROLL_OFFSET_Y = 100.0
@@ -105,7 +107,7 @@ func _create_random_floor():
 	for i in range(4):
 		var idx = randi()%(8-3)
 		for j in range(3):
-			var floor_obj = Floor.instance()
+			var floor_obj = FloorObj.instance()
 			floor_obj.position.x = _block_x(idx+j)
 			floor_obj.position.y = (1.5 + i * 4) * Common.TILE_SIZE
 			_block_layer.add_child(floor_obj)
@@ -210,7 +212,7 @@ func _update_camera() -> void:
 		if prev != next:
 			var next_y = next * Common.TILE_SIZE - 424 + 12
 			for x in [Common.TILE_HALF, 480.0 - Common.TILE_HALF]:
-				var wall = Wall.instance()
+				var wall = WallObj.instance()
 				wall.position.x = x
 				wall.position.y = next_y
 				_block_layer.add_child(wall)
@@ -228,7 +230,7 @@ func _update_camera() -> void:
 func _random_floor(next_y:float) -> void:
 	var idx = randi()%(8-5) + 1
 	for j in range(2):
-		var floor_obj = Floor.instance()
+		var floor_obj = FloorObj.instance()
 		floor_obj.position.x = _block_x(idx+j)
 		floor_obj.position.y = next_y
 		_block_layer.add_child(floor_obj)
@@ -249,7 +251,7 @@ func _block_x(idx:int=-1) -> float:
 
 ## ブロックの出現.
 func _appear_block() -> void:
-	var block = Block.instance()
+	var block = BlockObj.instance()
 	block.position.x = _block_x()
 	block.position.y = _camera.position.y - 424
 	block.set_parent(_block_layer)
@@ -302,6 +304,13 @@ func _update_enemy_hp() -> void:
 		if _healthBar.visible:
 			# 敵が死亡したのでカメラを揺らす.
 			_start_camera_shake(eCameraShake.VANISH_ENEMY)
+			# 敵弾をすべて消す.
+			for bullet in _bullet_layer.get_children():
+				bullet.vanish()
+			# ブロックを足場に変化させる.
+			for block in _block_layer.get_children():
+				if block is Block:
+					block.freeze()
 		_healthBar.visible = false # ゲージを消します
 		_labelRank.visible = true # 代わりにランクを表示します
 		return
@@ -371,6 +380,13 @@ func _update_camera_shake(delta:float) -> void:
 
 ## 敵の出現チェック.
 func _check_appear_enemy(next:int, next_y:float) -> void:
+	if _DEBUG_ENEMY:
+		if is_instance_valid(_enemy) == false:
+			# デバッグ用の敵出現ルーチン.
+			_enemy_rank = _DEBUG_ENEMY_RANK
+			_appear_enemy(next_y)
+		return
+	
 	if _enemy_rank == 0:
 		if next < -2:
 			# 最初の敵が出現.
@@ -394,7 +410,7 @@ func _check_appear_enemy(next:int, next_y:float) -> void:
 		_appear_enemy(next_y)
 
 ## 敵の初期化.
-func _init_enemy(enemy) -> void:
+func _init_enemy(enemy:Enemy) -> void:
 	enemy.set_target(_player)
 	enemy.set_camera(_camera)
 	enemy.set_bullets(_bullet_layer)

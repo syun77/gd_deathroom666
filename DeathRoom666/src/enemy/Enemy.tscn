@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/enemy/Enemy.gd" type="Script" id=1]
 [ext_resource path="res://assets/images/enemy.png" type="Texture" id=2]
 [ext_resource path="res://assets/sound/hit.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/fonts/new_theme.tres" type="Theme" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 60.0
@@ -28,3 +29,9 @@ __meta__ = {
 [node name="AudioHit" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 volume_db = -3.496
+
+[node name="Label" type="Label" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 14.0
+theme = ExtResource( 4 )
