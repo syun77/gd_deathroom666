@@ -47,10 +47,14 @@ class DelayedBatteryInfo:
 	var deg:float = 0
 	var speed:float = 0
 	var delay:float = 0
-	func _init(_deg:float, _speed:float, _delay:float) -> void:
+	var ax:float = 0
+	var ay:float = 0
+	func _init(_deg:float, _speed:float, _delay:float, _ax:float, _ay:float) -> void:
 		deg = _deg
 		speed = _speed
 		delay = _delay
+		ax = _ax
+		ay = _ay
 	func elapse(delta:float) -> bool:
 		delay -= delta
 		if delay <= 0:
@@ -239,16 +243,17 @@ func _move_and_bullet(delta) -> void:
 	_spr.rotation_degrees = _get_aim2() - 90
 	
 ## 弾を撃つ.
-func _bullet(deg:float, speed:float, delay:float=0) -> void:
+func _bullet(deg:float, speed:float, delay:float=0, ax:float=0, ay:float=0) -> void:
 	if delay > 0.0:
 		# 遅延発射なのでリストに追加するだけ.
-		_add_battery(deg, speed, delay)
+		_add_battery(deg, speed, delay, ax, ay)
 		return
 	
 	# 発射する.
 	var b = Bullet.instance()
 	b.position = position
 	b.set_velocity(deg, speed)
+	b.set_accel(ax, ay)
 	_bullets.add_child(b)
 
 ## NWayを撃つ
@@ -268,18 +273,18 @@ func _nway(n, center, wide, speed, delay=0) -> void:
 		a += d
 
 ## 遅延発射リストに追加する.
-func _add_battery(deg:float, speed:float, delay:float) -> void:
-	var b = DelayedBatteryInfo.new(deg, speed, delay)
+func _add_battery(deg:float, speed:float, delay:float, ax:float, ay:float) -> void:
+	var b = DelayedBatteryInfo.new(deg, speed, delay, ax, ay)
 	_batteries.append(b)
 
 ## 遅延発射リストを更新する.
 func _update_batteies(delta:float) -> void:
 	var tmp = []
-	for b in _batteries:
-		var battery:DelayedBatteryInfo = b
-		if battery.elapse(delta):
+	for battery in _batteries:
+		var b:DelayedBatteryInfo = battery
+		if b.elapse(delta):
 			# 発射する.
-			_bullet(battery.deg, battery.speed)
+			_bullet(b.deg, b.speed, 0, b.ax, b.ay)
 			continue
 		
 		# 発射できないのでリストに追加.
@@ -288,9 +293,6 @@ func _update_batteies(delta:float) -> void:
 	_batteries = tmp
 
 func _ai_1(aim:float) -> void:
-	
-	_label.visible = true
-	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
 	
 	if _cnt%120 == 0:
 		# 2秒間隔で行動する.
@@ -305,9 +307,34 @@ func _ai_1(aim:float) -> void:
 		_nway(3, aim, 5, 100)	
 	
 func _ai_2(aim:float) -> void:
-	if _cnt%60 == 0:
-		for i in range(3):
-			_nway(3, aim, 5, 100 + 20 * i, 0.02 * i)
+	
+	_label.visible = true
+	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
+
+	if _cnt%120 == 0:
+		# 2秒間隔で行動する.
+		_interval += 1
+	else:
+		return
+
+	match _interval:
+		2, 4, 6:
+			for i in range(10):
+				for s in [-1, 1]:
+					var deg = 270 + 30 * s
+					var ax = -1.0 * s
+					var ay = 0
+					_bullet(deg, 300, i*0.1, ax, ay)
+		8, 10, 12:
+			for i in range(10):
+				_nway(3, aim, 5, 100 + (70 * i), i * 0.06)
+		15:
+			for i in range(5):
+				for j in [-1, 0, 1]:
+					var deg = 90 + (30 * j)
+					_bullet(deg, 300, 0.1*i, 0.0, 5)
+					
+			_interval = 0 # 最初からやり直す.
 	
 func _ai_3(aim:float) -> void:
 	if _cnt%60 == 0:

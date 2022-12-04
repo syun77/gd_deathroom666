@@ -4,12 +4,18 @@ onready var _spr = $Bullet
 
 # 移動速度.
 var _velocity = Vector2()
+# 加速度.
+var _accel = Vector2()
 
 ## 移動量を設定する.
 func set_velocity(deg:float, speed:float) -> void:
 	var rad = deg2rad(deg)
 	_velocity.x = cos(rad) * speed
 	_velocity.y = -sin(rad) * speed
+	
+func set_accel(ax:float, ay:float) -> void:
+	_accel.x = ax
+	_accel.y = ay
 
 ## 移動量を取得する.
 func get_velocity() -> Vector2:
@@ -25,6 +31,7 @@ func _ready() -> void:
 	_spr.modulate = Color.salmon
 
 func _process(delta: float) -> void:
+	_velocity += _accel
 	position += _velocity * delta;
 	
 	# 画像の回転.
