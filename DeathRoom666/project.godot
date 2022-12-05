@@ -24,6 +24,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/effects/Particle.gd"
 }, {
+"base": "KinematicBody2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://Player.gd"
+}, {
+"base": "Area2D",
+"class": "Pocky",
+"language": "GDScript",
+"path": "res://src/enemy/Pocky.gd"
+}, {
 "base": "RigidBody2D",
 "class": "Spike2",
 "language": "GDScript",
@@ -33,6 +43,8 @@ _global_script_class_icons={
 "Block": "",
 "Enemy": "",
 "Particle": "",
+"Player": "",
+"Pocky": "",
 "Spike2": ""
 }
 

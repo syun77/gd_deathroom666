@@ -29,6 +29,7 @@ enum eColLayer {
 # vars.
 #-----------------------------------
 var _layers = []
+var _player:Player = null
 
 var _snd:AudioStreamPlayer
 var _snd_tbl = {
@@ -39,12 +40,18 @@ var _snd_tbl = {
 #-----------------------------------
 # public functions.
 #-----------------------------------
-func setup(root, layers) -> void:
+func setup(root, layers, player:Player) -> void:
 	_layers = layers
+	_player = player
 	_snd = AudioStreamPlayer.new()
 	_snd.volume_db = -4
 	root.add_child(_snd)
 	
+func get_player() -> Player:
+	if is_instance_valid(_player) == false:
+		return null
+	return _player
+
 func get_layer(name:String) -> CanvasLayer:
 	return _layers[name]
 
