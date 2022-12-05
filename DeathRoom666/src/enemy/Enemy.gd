@@ -313,7 +313,7 @@ func _ai_1(aim:float) -> void:
 		# 3回撃ったら3回休む
 		return
 	else:
-		_nway(3, aim, 5, 100)	
+		_nway(3, aim, 10, 100)
 
 ## 敵のAI (たこ焼き)
 func _ai_2(aim:float) -> void:
@@ -325,16 +325,17 @@ func _ai_2(aim:float) -> void:
 
 	match _interval:
 		2, 4, 6:
+			_shoot_spike(aim, 200)
 			for i in range(10):
 				for s in [-1, 1]:
 					var deg = 270 + 30 * s
 					var ax = -1.0 * s
 					var ay = 0
 					_bullet(deg, 300, i*0.1, ax, ay)
-		8, 10, 12:
+		8, 11, 14:
 			for i in range(5):
 				_nway(3, aim, 45, ((_interval-8)*30)+200+(i*30), i * 0.01)
-		15:
+		17:
 			for i in range(5):
 				for j in [-1, 0, 1]:
 					var deg = 90 + (30 * j)
