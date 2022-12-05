@@ -28,7 +28,8 @@ func vanish() -> void:
 	queue_free()
 
 func _ready() -> void:
-	_spr.modulate = Color.salmon
+	#_spr.modulate = Color.salmon
+	pass
 
 func _process(delta: float) -> void:
 	_velocity += _accel

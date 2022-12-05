@@ -332,8 +332,8 @@ func _ai_2(aim:float) -> void:
 					var ay = 0
 					_bullet(deg, 300, i*0.1, ax, ay)
 		8, 10, 12:
-			for i in range(10):
-				_nway(3, aim, 5, 100 + (70 * i), i * 0.06)
+			for i in range(5):
+				_nway(3, aim, 45, ((_interval-8)*30)+200+(i*30), i * 0.01)
 		15:
 			for i in range(5):
 				for j in [-1, 0, 1]:

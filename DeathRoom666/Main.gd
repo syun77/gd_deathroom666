@@ -95,7 +95,7 @@ func _ready() -> void:
 		"bullet": _bullet_layer,
 		"effect": _effect_layer,
 	}
-	Common.setup(self, layers)
+	Common.setup(self, layers, _player)
 	
 	_change_bgm(1)
 

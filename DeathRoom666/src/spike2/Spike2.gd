@@ -22,7 +22,7 @@ func vanish() -> void:
 	queue_free()
 
 func _ready() -> void:
-	pass
+	_spr.frame = 0
 
 func _process(delta: float) -> void:
 	if _linear_velocity_tmp.length() != 0:
@@ -30,13 +30,11 @@ func _process(delta: float) -> void:
 		apply_central_impulse(_linear_velocity_tmp)
 		_linear_velocity_tmp = Vector2.ZERO # ゼロにする.
 	
+	if linear_velocity.length() > 0:
+		_spr.rotation = linear_velocity.angle()	
 
 func _physics_process(delta: float) -> void:	
 	_timer += delta
-	
-	# アニメーション更新.
-	_spr.frame = int(_timer*10) % 4
-
 
 func _on_Spike2_body_entered(body: Node) -> void:
 	# コリジョンレイヤー.
