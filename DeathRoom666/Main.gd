@@ -13,8 +13,8 @@ const EnemyObj = preload("res://src/enemy/Enemy.tscn")
 # ------------------------------------------
 # デバッグフラグ.
 const _DEBUG = false
-const _DEBUG_ENEMY = false # 敵をすぐに出現させる.
-const _DEBUG_ENEMY_RANK = 3 # デバッグ時の初期敵ランク.
+const _DEBUG_ENEMY = true # 敵をすぐに出現させる.
+const _DEBUG_ENEMY_RANK = 4 # デバッグ時の初期敵ランク.
 
 # カメラのスクロールオフセット.
 const SCROLL_OFFSET_Y = 100.0

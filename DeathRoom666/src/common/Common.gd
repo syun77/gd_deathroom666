@@ -30,6 +30,7 @@ enum eColLayer {
 #-----------------------------------
 var _layers = []
 var _player:Player = null
+var _prev_target_pos = Vector2.ZERO # 前回のターゲットの座標.
 
 var _snd:AudioStreamPlayer
 var _snd_tbl = {
@@ -51,6 +52,20 @@ func get_player() -> Player:
 	if is_instance_valid(_player) == false:
 		return null
 	return _player
+
+func get_aim(pos:Vector2) -> float:
+	var player = get_player()
+	var target = _prev_target_pos
+	if player != null:
+		target = player.position
+	
+	var d = target - pos
+	var aim = rad2deg(atan2(-d.y, d.x))
+	
+	# ターゲットの座標を保存しておく.
+	_prev_target_pos = target
+	
+	return aim
 
 func get_layer(name:String) -> CanvasLayer:
 	return _layers[name]

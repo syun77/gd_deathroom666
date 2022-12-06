@@ -7,6 +7,7 @@ class_name Enemy
 # --------------------------------
 const BulletObj = preload("res://src/bullet/Bullet.tscn")
 const Spike2Obj = preload("res://src/spike2/Spike2.tscn")
+const PockeyObj = preload("res://src/enemy/Pocky.tscn")
 
 # --------------------------------
 # 定数.
@@ -300,6 +301,14 @@ func _shoot_spike(deg:float, power:float) -> void:
 	spike.set_velocity(deg, power)
 	_bullets.add_child(spike)
 
+## Pockeを発射する.
+func _shoot_pocky(deg:float, speed:float, delay:float) -> void:
+	var pocky = PockeyObj.instance()
+	pocky.position = position
+	pocky.set_velocity(deg, speed)
+	pocky.set_appear_timer(delay)
+	_bullets.add_child(pocky)
+
 ## 敵のAI (ナス)
 func _ai_1(aim:float) -> void:
 	
@@ -368,13 +377,26 @@ func _ai_3(aim:float) -> void:
 func _ai_4(aim:float) -> void:
 	_label.visible = true
 	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
+	
+	if _cnt%120 == 0:
+		# 2秒間隔で行動する.
+		_interval += 1
+	else:
+		return
 		
-	if _cnt%60 == 0:
-		for i in range(3):
-			_nway(3, aim, 5, 100 + 20 * i, 0.02 * i)
+	match _interval%10:
+		0, 2, 4, 8:
+			_shoot_pocky(aim+90, 100, 0.8)
+			_shoot_pocky(aim+90, 200, 1.0)
+			_shoot_pocky(aim-90, 300, 1.2)
+		1, 5, 9:
+			_nway(3, aim, 10, 200)
 
 ## 敵のAI (Xbox)
 func _ai_5(aim:float) -> void:
+	_label.visible = true
+	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
+		
 	if _cnt%60 == 0:
 		for i in range(3):
 			_nway(3, aim, 5, 100 + 20 * i, 0.02 * i)

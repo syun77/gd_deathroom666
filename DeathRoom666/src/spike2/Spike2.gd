@@ -22,7 +22,7 @@ func vanish() -> void:
 	queue_free()
 
 func _ready() -> void:
-	_spr.frame = 0
+	_spr.frame = 1 # 大根ミサイル.
 
 func _process(delta: float) -> void:
 	if _linear_velocity_tmp.length() != 0:
