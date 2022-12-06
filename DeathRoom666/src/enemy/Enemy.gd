@@ -6,7 +6,7 @@ class_name Enemy
 # preload.
 # --------------------------------
 const BulletObj = preload("res://src/bullet/Bullet.tscn")
-const Spike2Obj = preload("res://src/spike2/Spike2.tscn")
+const Spike2Obj = preload("res://src/bullet/Spike2.tscn")
 const PockeyObj = preload("res://src/enemy/Pocky.tscn")
 
 # --------------------------------

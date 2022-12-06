@@ -9,10 +9,20 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Area2D",
+"class": "Blast",
+"language": "GDScript",
+"path": "res://src/bullet/Blast.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Block",
 "language": "GDScript",
 "path": "res://Block.gd"
+}, {
+"base": "Area2D",
+"class": "Bomber",
+"language": "GDScript",
+"path": "res://src/bullet/Bomber.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Enemy",
@@ -37,10 +47,12 @@ _global_script_classes=[ {
 "base": "RigidBody2D",
 "class": "Spike2",
 "language": "GDScript",
-"path": "res://src/spike2/Spike2.gd"
+"path": "res://src/bullet/Spike2.gd"
 } ]
 _global_script_class_icons={
+"Blast": "",
 "Block": "",
+"Bomber": "",
 "Enemy": "",
 "Particle": "",
 "Player": "",
