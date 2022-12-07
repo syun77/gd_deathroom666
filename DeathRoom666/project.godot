@@ -80,6 +80,7 @@ window/stretch/aspect="keep"
 [global]
 
 "カラー"=false
+steam=false
 
 [gui]
 
