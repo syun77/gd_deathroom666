@@ -5,9 +5,10 @@ class_name Enemy
 # --------------------------------
 # preload.
 # --------------------------------
-const BulletObj = preload("res://src/bullet/Bullet.tscn")
-const Spike2Obj = preload("res://src/bullet/Spike2.tscn")
-const PockeyObj = preload("res://src/enemy/Pocky.tscn")
+const BulletObj  = preload("res://src/bullet/Bullet.tscn")
+const Spike2Obj  = preload("res://src/bullet/Spike2.tscn")
+const PockeyObj  = preload("res://src/enemy/Pocky.tscn")
+const ReticleObj = preload("res://src/bullet/Reticle.tscn")
 
 # --------------------------------
 # 定数.
@@ -79,6 +80,7 @@ var _id:int = 0
 var _batteries = [] # 弾のディレイ発射用配列.
 var _cnt = 0 # 経過フレームカウンタ.
 var _interval = 0
+var _reticle:Reticle = null
 
 # --------------------------------
 # public functions.
@@ -309,6 +311,15 @@ func _shoot_pocky(deg:float, speed:float, delay:float) -> void:
 	pocky.set_appear_timer(delay)
 	_bullets.add_child(pocky)
 
+## 照準を生成する.
+func _create_reticle() -> void:
+	if is_instance_valid(_reticle):
+		return # 生成済みの場合は何もしない.
+	
+	_reticle = ReticleObj.instance()
+	_reticle.position = position
+	_bullets.add_child(_reticle)
+
 ## 敵のAI (ナス)
 func _ai_1(aim:float) -> void:
 	
@@ -375,9 +386,6 @@ func _ai_3(aim:float) -> void:
 
 ## 敵のAI (プリン)	
 func _ai_4(aim:float) -> void:
-	_label.visible = true
-	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
-	
 	if _cnt%120 == 0:
 		# 2秒間隔で行動する.
 		_interval += 1
@@ -397,6 +405,14 @@ func _ai_5(aim:float) -> void:
 	_label.visible = true
 	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
 		
-	if _cnt%60 == 0:
-		for i in range(3):
-			_nway(3, aim, 5, 100 + 20 * i, 0.02 * i)
+	if _cnt%120 == 0:
+		# 2秒間隔で行動する.
+		_interval += 1
+	else:
+		return
+
+	match _interval:
+		1:
+			_create_reticle()
+		_:
+			pass

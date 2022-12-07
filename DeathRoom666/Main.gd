@@ -14,7 +14,7 @@ const EnemyObj = preload("res://src/enemy/Enemy.tscn")
 # デバッグフラグ.
 const _DEBUG = false
 const _DEBUG_ENEMY = true # 敵をすぐに出現させる.
-const _DEBUG_ENEMY_RANK = 4 # デバッグ時の初期敵ランク.
+const _DEBUG_ENEMY_RANK = 5 # デバッグ時の初期敵ランク.
 
 # カメラのスクロールオフセット.
 const SCROLL_OFFSET_Y = 100.0
@@ -83,7 +83,7 @@ var _next_bgm:int = 0
 # private functions.
 # ------------------------------------------
 func _ready() -> void:
-	#OS.set_window_size(Vector2(160, 300))
+	OS.set_window_size(Vector2(160, 300))
 	
 	# ランダムに足場を作る
 	_create_random_floor()

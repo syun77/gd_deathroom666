@@ -77,7 +77,7 @@ func _process(delta: float) -> void:
 		var d = target.position - position
 		# 狙い撃ち角度を計算する.
 		var aim = rad2deg(atan2(-d.y, d.x))
-		var diff = _diff_angle(_deg, aim)
+		var diff = Common.diff_angle(_deg, aim)
 		# 旋回する.
 		_deg += diff * delta * 3 + (diff * _timer * (delta+0.5))
 	
@@ -106,16 +106,6 @@ func _update_line2d() -> void:
 		# 0.5の重みで線形補間します
 		_line.points[i+1] = b.linear_interpolate(a, 0.5)
 
-## 角度差を求める.
-func _diff_angle(now:float, next:float) -> float:
-	# 角度差を求める.
-	var d = next - now
-	# 0.0〜360.0にする.
-	d -= floor(d / 360.0) * 360.0
-	# -180.0〜180.0の範囲にする.
-	if d > 180.0:
-		d -= 360.0
-	return d
 
 ## Area2Dと衝突した.
 func _on_Shot_area_entered(area: Area2D) -> void:

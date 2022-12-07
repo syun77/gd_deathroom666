@@ -23,7 +23,10 @@ var _timer = 0.0
 # private functions.
 # ---------------------------------
 func _process(delta: float) -> void:
-	_timer = delta
+	_timer += delta
 	var sc = sin(_timer * PI) # 0(0度) -> 1(90度) -> 0 (180度)
 	scale = Vector2(sc, sc)
+	
+	if _timer >= TIMER:
+		queue_free()
 	
