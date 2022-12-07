@@ -4,10 +4,15 @@ extends Area2D
 # =================================
 class_name Bomber
 
+const BlastObj = preload("res://src/bullet/Blast.tscn")
 # ---------------------------------
 # 定数.
 # ---------------------------------
 const TIMER = 1.0
+# ---------------------------------
+# onready.
+# ---------------------------------
+onready var _snd = $AudioStreamPlayer2D
 
 # ---------------------------------
 # vars.
@@ -23,24 +28,37 @@ var _target_pos := Vector2.ZERO
 func set_pos(start:Vector2, end:Vector2) -> void:
 	position = start
 	_start_pos = start
+	_target_pos = end
+
+func vanish() -> void:
+	queue_free()
 
 # ---------------------------------
 # private functions.
 # ---------------------------------
 func _ready() -> void:
-	pass
+	_snd.play()
 
 func _process(delta: float) -> void:
 	_timer += delta
-	var rate = _ease(_timer/TIMER)
+	var rate = _back_in(_timer/TIMER)
 	if rate > 1.0:
 		rate = 1.0
 	var d = _target_pos - _start_pos
 	position = _start_pos + (d * rate)
 	if rate >= TIMER:
 		# 終了.
-		queue_free()
+		var bullets = Common.get_layer("bullet")
+		var blast = BlastObj.instance()
+		blast.position = position
+		bullets.add_child(blast)
+
+		vanish()
 		
-func _ease(t:float) -> float:
-	# Cubic in.
+func _cube_in(t:float) -> float:
+	# cubic in.
 	return t * t * t
+
+func _back_in(t:float) -> float:
+	# back in.
+	return t * t * (2.70158 * t - 1.70158)

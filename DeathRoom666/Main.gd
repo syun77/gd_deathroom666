@@ -83,7 +83,7 @@ var _next_bgm:int = 0
 # private functions.
 # ------------------------------------------
 func _ready() -> void:
-	OS.set_window_size(Vector2(160, 300))
+	#OS.set_window_size(Vector2(160, 300))
 	
 	# ランダムに足場を作る
 	_create_random_floor()

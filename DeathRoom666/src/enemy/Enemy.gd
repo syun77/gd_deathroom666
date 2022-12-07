@@ -9,6 +9,7 @@ const BulletObj  = preload("res://src/bullet/Bullet.tscn")
 const Spike2Obj  = preload("res://src/bullet/Spike2.tscn")
 const PockeyObj  = preload("res://src/enemy/Pocky.tscn")
 const ReticleObj = preload("res://src/bullet/Reticle.tscn")
+const BomberObj  = preload("res://src/bullet/Bomber.tscn")
 
 # --------------------------------
 # 定数.
@@ -404,14 +405,22 @@ func _ai_4(aim:float) -> void:
 func _ai_5(aim:float) -> void:
 	_label.visible = true
 	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
-		
+	
+	if is_instance_valid(_reticle):
+		if _reticle.can_shoot():
+			# 爆弾発射.
+			var bomber = BomberObj.instance()
+			bomber.set_pos(position, _reticle.position)
+			_reticle.start_bomber(bomber)
+			_bullets.add_child(bomber)
+	
 	if _cnt%120 == 0:
 		# 2秒間隔で行動する.
 		_interval += 1
 	else:
 		return
 
-	match _interval:
+	match _interval%3:
 		1:
 			_create_reticle()
 		_:
