@@ -417,8 +417,8 @@ func _ai_4(aim:float) -> void:
 
 ## 敵のAI (Xbox)
 func _ai_5(aim:float) -> void:
-	_label.visible = true
-	_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
+	#_label.visible = true
+	#_label.text = "cnt:%d\ninterval:%d"%[_cnt, _interval]
 	
 	if is_instance_valid(_reticle):
 		if _reticle.can_shoot():

@@ -12,9 +12,10 @@ const EnemyObj = preload("res://src/enemy/Enemy.tscn")
 # 定数.
 # ------------------------------------------
 # デバッグフラグ.
-const _DEBUG = false
+const _DEBUG = true
+const _DEBUG_REVIVAL = false # 画面外に出ても自動復活するかどうか.
 const _DEBUG_ENEMY = false # 敵をすぐに出現させる.
-const _DEBUG_ENEMY_RANK = 4 # デバッグ時の初期敵ランク.
+const _DEBUG_ENEMY_RANK = 5 # デバッグ時の初期敵ランク.
 
 # カメラのスクロールオフセット.
 const SCROLL_OFFSET_Y = 100.0
@@ -116,7 +117,9 @@ func _create_random_floor():
 
 ## 更新
 func _process(delta: float) -> void:
-	_debug()
+	if _DEBUG:
+		# デバッグ機能の更新.
+		_update_debug()
 	
 	match _state:
 		eState.MAIN:
@@ -459,12 +462,12 @@ func _update_bgm():
 # debug functions.
 # ------------------------------------------
 
-func _debug() -> void:
+func _update_debug() -> void:
 	if Input.is_action_just_pressed("ui_reset"):
 		get_tree().change_scene("res://Main.tscn")
 
 	_labelScore.text = "Wall:%d Shot:%d Bullet:%d"%[_block_layer.get_child_count(), _shot_layer.get_child_count(), _bullet_layer.get_child_count()]
-	if _DEBUG:
+	if _DEBUG_REVIVAL:
 		if is_instance_valid(_player):
 			# 画面外ジャンプ.
 			if _player.position.y > _camera.position.y + DBG_OUTSIDE_OFFSET_Y:

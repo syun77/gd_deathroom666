@@ -7,8 +7,8 @@ class_name Reticle
 # -----------------------------
 # 定数.
 # -----------------------------
-const INIT_SPEED = 300.0 # 初速.
-const MAX_SPEED  = 100.0 # 最高速度.
+const INIT_SPEED = 500.0 # 初速.
+const MAX_SPEED  = 200.0 # 最高速度.
 const TIME_SHOOT = 0.5 # 0.5秒で発射する.
 const TIMEOUT = 3.0 # 3秒でタイムアウト.
 
@@ -78,7 +78,7 @@ func start_bomber(bomber) -> void:
 ## 更新.
 func _process(delta: float) -> void:
 	# デバッグ用.
-	#_label.text = "TIME: %3.2f\nAIM: %3.2f"%[_timer, _aim_time]
+	#_label.text = "TIME: %3.2f\nAIM: %3.2f\nSPEED:%3.2f"%[_timer, _aim_time, _speed]
 
 	match _state:
 		eState.MAIN:
@@ -89,12 +89,13 @@ func _process(delta: float) -> void:
 func _update_main(delta:float) -> void:
 	if _speed > MAX_SPEED:
 		# 最高速度を超えていたら減速する.
-		_speed -= 100 * delta
+		_speed -= 1 * delta
 	
 	if _is_hit:
 		_aim_time += delta
 	else:
-		_aim_time = 0.0
+		# リセットしない
+		#_aim_time = 0.0
 		_aim_cnt = 0
 	
 	_timer += delta
@@ -129,7 +130,7 @@ func _physics_process(_delta: float) -> void:
 	if _state == eState.MAIN:
 		if _is_hit:
 			_aim_cnt += 1
-			if _aim_cnt%5 == 1:
+			if _aim_cnt%8 == 1:
 				_snd.play()
 
 func _on_Reticle_body_entered(body: Node) -> void:

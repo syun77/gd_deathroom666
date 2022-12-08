@@ -23,6 +23,7 @@ shape = SubResource( 1 )
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
-volume_db = -2.0
+volume_db = 5.0
+pitch_scale = 1.34
 
 [connection signal="body_entered" from="." to="." method="_on_Blast_body_entered"]
