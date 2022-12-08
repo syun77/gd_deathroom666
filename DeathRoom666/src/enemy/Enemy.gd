@@ -395,11 +395,19 @@ func _ai_4(aim:float) -> void:
 		
 	match _interval%10:
 		0, 2, 4, 8:
-			_shoot_pocky(aim+90, 100, 0.8)
-			_shoot_pocky(aim+90, 200, 1.0)
-			_shoot_pocky(aim-90, 300, 1.2)
+			var cnt = 1
+			var rate = hpratio()
+			if rate < 0.25:
+				cnt = 5
+			elif rate < 0.5:
+				cnt = 3
+			elif rate < 0.75:
+				cnt = 2
+			for i in range(cnt):
+				_shoot_pocky(aim+90, 100+100*i, 1.4-0.2*i)
 		1, 5, 9:
-			_nway(3, aim, 10, 200)
+			if hpratio() < 0.5:
+				_nway(3, aim, 10, 200)
 
 ## 敵のAI (Xbox)
 func _ai_5(aim:float) -> void:
@@ -420,8 +428,22 @@ func _ai_5(aim:float) -> void:
 	else:
 		return
 
+	# レティクル発生
 	match _interval%3:
 		1:
 			_create_reticle()
+		_:
+			pass
+	
+	match _interval%10:
+		0, 5, 9:
+			# 体力が3/4以下で通常弾を発射する.
+			if hpratio() < 0.75:
+				_nway(3, aim, 10, 200)
+		2:
+			# 体力が半分以下になると大根ミサイルを発射する
+			if hpratio() < 0.5:
+				_shoot_spike(aim-60, 300)
+				_shoot_spike(aim+60, 300)
 		_:
 			pass
