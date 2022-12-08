@@ -17,6 +17,7 @@ onready var _spr = $Sprite
 # vars.
 # --------------------------
 var _velocity = Vector2()
+var _is_auto_collect = false # 自動回収フラグ
 
 # --------------------------
 # public functions.
@@ -29,6 +30,9 @@ func set_velocity(deg:float, speed:float) -> void:
 
 ## 消滅
 func vanish() -> void:
+	Common.start_particle_ring(position, 1.0, Color.yellow)
+	Common.add_score(100)
+	Common.play_se("coin")
 	queue_free()
 # --------------------------
 # private functions.
@@ -41,6 +45,16 @@ func _physics_process(delta: float) -> void:
 	# スプライトを回転する.
 	_spr.rotation_degrees += 100 * delta
 	
+	# プレイヤーに近い場合は近づく.
+	var dist = Common.get_player_distance(position)
+	if dist < 128.0:
+		_is_auto_collect = true
+	
+	if _is_auto_collect:
+		var target = Common.get_player_position()
+		_velocity += (target - position) * 0.5
+	
+	# 移動する
 	_velocity.y += GRAVITY
 	_velocity *= 0.97
 	if _velocity.y > MAX_SPEED:
@@ -58,5 +72,4 @@ func _physics_process(delta: float) -> void:
 
 func _on_Item_body_entered(body: Node) -> void:
 	# アイテム獲得.
-	Common.start_particle_ring(position, 1.0, Color.yellow)
 	vanish()

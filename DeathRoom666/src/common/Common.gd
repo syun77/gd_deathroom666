@@ -39,6 +39,7 @@ var _snd:AudioStreamPlayer
 var _snd_tbl = {
 	"damage": "res://assets/sound/damage.wav",
 	"explosion" : "res://assets/sound/explosion.wav",
+	"coin": "res://assets/sound/coin.wav",
 }
 
 #-----------------------------------
@@ -81,6 +82,19 @@ func get_aim(pos:Vector2) -> float:
 	_prev_target_pos = target
 	
 	return aim
+
+func get_player_position() -> Vector2:
+	var player = get_player()
+	if player == null:
+		return _prev_target_pos
+	return player.position
+	
+func get_player_distance(pos:Vector2) -> float:
+	var player = get_player()
+	if player == null:
+		return 9999999.0
+	var d = player.position - pos
+	return d.length()
 
 func get_layer(name:String) -> CanvasLayer:
 	return _layers[name]

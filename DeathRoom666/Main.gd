@@ -291,7 +291,7 @@ func _check_outside() -> void:
 	for item in _item_layer.get_children():
 		if item.position.y > outside_y:
 			# 画面外なので消す.
-			item.vanish()
+			item.queue_free()
 	
 	for shot in _shot_layer.get_children():
 		if not shot is Area2D:
