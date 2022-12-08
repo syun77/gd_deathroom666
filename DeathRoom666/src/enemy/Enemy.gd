@@ -10,6 +10,7 @@ const Spike2Obj  = preload("res://src/bullet/Spike2.tscn")
 const PockeyObj  = preload("res://src/enemy/Pocky.tscn")
 const ReticleObj = preload("res://src/bullet/Reticle.tscn")
 const BomberObj  = preload("res://src/bullet/Bomber.tscn")
+const ItemObj    = preload("res://src/item/Item.tscn")
 
 # --------------------------------
 # 定数.
@@ -134,6 +135,11 @@ func damage(v:int) -> void:
 func vanish() -> void:
 	Common.start_particle_enemy(position, 1, Color.white)
 	Common.play_se("explosion")
+	
+	for i in range(8):
+		var deg = rand_range(30, 150)
+		Common.add_item(position, deg, 500)
+	
 	queue_free()
 
 ## HPの割合を取得する.

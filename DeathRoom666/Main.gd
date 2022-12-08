@@ -50,6 +50,7 @@ onready var _main_layer = $MainLayer
 onready var _block_layer = $WallLayer
 onready var _player = $MainLayer/Player
 onready var _camera = $MainCamera
+onready var _item_layer = $ItemLayer
 onready var _enemy_layer = $EnemyLayer
 onready var _shot_layer = $ShotLayer
 onready var _bullet_layer = $BulletLayer
@@ -83,13 +84,14 @@ var _next_bgm:int = 0
 # private functions.
 # ------------------------------------------
 func _ready() -> void:
-	OS.set_window_size(Vector2(160, 300))
+	#OS.set_window_size(Vector2(160, 300))
 	
 	# ランダムに足場を作る
 	_create_random_floor()
 	
 	# セットアップ.
 	var layers = {
+		"item": _item_layer,
 		"enemy": _enemy_layer,
 		"shot": _shot_layer,
 		"bullet": _bullet_layer,
@@ -282,6 +284,11 @@ func _check_outside() -> void:
 		if block.position.y > outside_y:
 			# 画面外なので消す.
 			block.queue_free()
+	
+	for item in _item_layer.get_children():
+		if item.position.y > outside_y:
+			# 画面外なので消す.
+			item.vanish()
 	
 	for shot in _shot_layer.get_children():
 		if not shot is Area2D:

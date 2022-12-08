@@ -160,6 +160,9 @@ follow_viewport_enable = true
 position = Vector2( 136, 800 )
 _effect_layer = NodePath("../../EffectLayerBack")
 
+[node name="ItemLayer" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
 [node name="EnemyLayer" type="CanvasLayer" parent="."]
 follow_viewport_enable = true
 

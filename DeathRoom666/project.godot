@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/enemy/Enemy.gd"
 }, {
+"base": "Area2D",
+"class": "Item",
+"language": "GDScript",
+"path": "res://src/item/Item.gd"
+}, {
 "base": "Sprite",
 "class": "Particle",
 "language": "GDScript",
@@ -59,6 +64,7 @@ _global_script_class_icons={
 "Block": "",
 "Bomber": "",
 "Enemy": "",
+"Item": "",
 "Particle": "",
 "Player": "",
 "Pocky": "",
@@ -147,6 +153,7 @@ ui_reset={
 2d_physics/layer_7="Shot"
 2d_physics/layer_8="Barrier"
 2d_physics/layer_9="Floor"
+2d_physics/layer_10="Item"
 
 [physics]
 

@@ -2,6 +2,7 @@ extends Node
 #-----------------------------------
 # preload.
 #-----------------------------------
+const ItemObj     = preload("res://src/item/Item.tscn")
 const ParticleObj = preload("res://src/effects/Particle.tscn")
 
 #-----------------------------------
@@ -28,6 +29,8 @@ enum eColLayer {
 #-----------------------------------
 # vars.
 #-----------------------------------
+var _hiscore = 0
+var _score = 0
 var _layers = []
 var _player:Player = null
 var _prev_target_pos = Vector2.ZERO # 前回のターゲットの座標.
@@ -41,7 +44,19 @@ var _snd_tbl = {
 #-----------------------------------
 # public functions.
 #-----------------------------------
+func get_score() -> int:
+	return _score
+	
+func add_score(v:int) -> void:
+	_score += v
+
+func init() -> void:
+	_hiscore = 0
+	_score = 0
+	
 func setup(root, layers, player:Player) -> void:
+	_score = 0
+	
 	_layers = layers
 	_player = player
 	_snd = AudioStreamPlayer.new()
@@ -95,6 +110,13 @@ func start_particle_enemy(pos:Vector2, time:float, color:Color) -> void:
 	start_particle(pos, time, color, 2.0)
 	for i in range(3):
 		start_particle_ring(pos, time + (i * 0.2), color, pow(2.0, (1 + i)))
+
+func add_item(pos:Vector2, deg:float, speed:float) -> Item:
+	var item = ItemObj.instance()
+	item.position = pos
+	item.set_velocity(deg, speed)
+	get_layer("item").add_child(item)
+	return item
 
 func play_se(name:String) -> void:
 	if not name in _snd_tbl:
