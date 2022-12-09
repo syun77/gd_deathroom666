@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Wall.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/fonts/new_theme.tres" type="Theme" id=3]
 [ext_resource path="res://Main.gd" type="Script" id=4]
+[ext_resource path="res://assets/fonts/bmpfont.tres" type="Theme" id=5]
 [ext_resource path="res://assets/ui/bar_under.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/bar_progress.png" type="Texture" id=7]
 
@@ -224,3 +225,12 @@ theme = ExtResource( 3 )
 text = "RANK: 999"
 
 [node name="AudioBgm" type="AudioStreamPlayer" parent="."]
+
+[node name="Label" type="Label" parent="."]
+margin_left = 72.0
+margin_top = 16.0
+margin_right = 352.0
+margin_bottom = 208.0
+theme = ExtResource( 5 )
+text = "ABCDEFG
+0123456789"
