@@ -32,6 +32,7 @@ func set_velocity(deg:float, speed:float) -> void:
 func vanish() -> void:
 	Common.start_particle_ring(position, 1.0, Color.yellow)
 	Common.add_score(100)
+	Common.add_ascii(position, "100")
 	Common.play_se("coin")
 	queue_free()
 # --------------------------

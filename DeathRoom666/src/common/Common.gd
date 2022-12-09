@@ -4,6 +4,7 @@ extends Node
 #-----------------------------------
 const ItemObj     = preload("res://src/item/Item.tscn")
 const ParticleObj = preload("res://src/effects/Particle.tscn")
+const AsciiObj    = preload("res://src/effects/ParticleAscii.tscn")
 
 #-----------------------------------
 # 定数.
@@ -131,6 +132,11 @@ func add_item(pos:Vector2, deg:float, speed:float) -> Item:
 	item.set_velocity(deg, speed)
 	get_layer("item").add_child(item)
 	return item
+
+func add_ascii(pos:Vector2, s:String) -> void:
+	var p = AsciiObj.instance()
+	get_layer("effect").add_child(p)
+	p.init(pos, s)
 
 func play_se(name:String) -> void:
 	if not name in _snd_tbl:

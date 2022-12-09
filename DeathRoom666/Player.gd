@@ -90,6 +90,9 @@ func stomp() -> void:
 
 ## 消滅開始.
 func vanish() -> void:
+	if _request_dead:
+		return # 死亡リクエスト済み.
+	
 	_request_dead = true
 	# 更新を止める.
 	set_process(false)

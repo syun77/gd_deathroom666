@@ -57,6 +57,7 @@ onready var _shot_layer = $ShotLayer
 onready var _bullet_layer = $BulletLayer
 onready var _effect_layer = $EffectLayerFront
 onready var _labelScore = $UILayer/LabelScore
+onready var _labelScore2 = $UILayer/LabelScore2
 onready var _ui_gameover = $UILayer/Gameover
 onready var _ui_caption = $UILayer/Gameover/LabelCaption
 onready var _healthBar = $UILayer/ProgressBar
@@ -140,6 +141,9 @@ func _process(delta: float) -> void:
 	
 	# BGM変更のチェック.
 	_update_bgm()
+	
+	# UIの更新.
+	_update_ui()
 
 ## 更新 > メイン.
 func _update_main(delta:float) -> void:
@@ -161,7 +165,7 @@ func _update_main(delta:float) -> void:
 	if _enemy_rank == 0:
 		_labelRank.text = "Z / Space: ジャンプ\n空中でジャンプすると2段ジャンプ" # ランク0の場合はチュートリアルを表示する.
 	else:
-		_labelRank.text = "RANK: %d / %d"%[_enemy_rank, MAX_RANK]
+		_labelRank.text = "RANK:%d/%d"%[_enemy_rank, MAX_RANK]
 	
 	# ゲームクリア判定.
 	if _enemy_rank >= MAX_RANK and is_instance_valid(_enemy):
@@ -250,6 +254,7 @@ func _check_block() -> void:
 	var next = int(_timer * interval)
 	if prev != next:
 		_appear_block()
+		Common.add_score(1)
 	_timer_prev = _timer
 	
 func _block_x(idx:int=-1) -> float:
@@ -312,6 +317,11 @@ func _check_outside() -> void:
 		if _player.position.y > outside_y:
 			_player.vanish()
 
+## アイテムを出現させる.
+func add_item(pos:Vector2) -> void:
+	var deg = rand_range(30, 150)
+	Common.add_item(pos, deg, 500)
+
 ## 敵HPバーの更新.
 func _update_enemy_hp() -> void:
 	if is_instance_valid(_enemy) == false:
@@ -320,17 +330,17 @@ func _update_enemy_hp() -> void:
 			_start_camera_shake(eCameraShake.VANISH_ENEMY)
 			# 敵弾をすべて消す.
 			for bullet in _bullet_layer.get_children():
+				add_item(bullet.position)
 				bullet.vanish()
 			# ブロックを足場に変化させる.
 			for block in _block_layer.get_children():
 				if block is Block:
+					add_item(block.position)
 					block.freeze()
 		_healthBar.visible = false # ゲージを消します
-		_labelRank.visible = true # 代わりにランクを表示します
 		return
 	
 	_healthBar.visible = true # ゲージを出現させます.
-	_labelRank.visible = false # ランクを消します.
 	var rate = _enemy.hpratio()
 	_healthBar.value = 100 * rate
 
@@ -406,6 +416,8 @@ func _check_appear_enemy(next:int, next_y:float) -> void:
 		if next < -2:
 			# 最初の敵が出現.
 			_enemy_rank += 1
+			# テーマを変更する.
+			_labelRank.theme = load("res://assets/fonts/bmpfont.tres")
 			_appear_enemy(next_y)
 		return
 	
@@ -442,6 +454,7 @@ func _appear_enemy(next_y:float) -> void:
 	# セットアップ.
 	_enemy.setup(_enemy_rank)
 
+## 更新 > BGM
 func _update_bgm():
 	if _now_bgm != _next_bgm:
 		var _can_change = true
@@ -457,6 +470,9 @@ func _update_bgm():
 			_bgm.stream = load("res://assets/sound/stage%d.mp3"%_now_bgm)
 			_bgm.play()
 
+## 更新 > UI
+func _update_ui():
+	_labelScore2.text = "%d"%Common.get_score()
 
 # ------------------------------------------
 # debug functions.
@@ -466,7 +482,7 @@ func _update_debug() -> void:
 	if Input.is_action_just_pressed("ui_reset"):
 		get_tree().change_scene("res://Main.tscn")
 
-	_labelScore.text = "Wall:%d Shot:%d Bullet:%d"%[_block_layer.get_child_count(), _shot_layer.get_child_count(), _bullet_layer.get_child_count()]
+	#_labelScore.text = "Wall:%d Shot:%d Bullet:%d"%[_block_layer.get_child_count(), _shot_layer.get_child_count(), _bullet_layer.get_child_count()]
 	if _DEBUG_REVIVAL:
 		if is_instance_valid(_player):
 			# 画面外ジャンプ.
