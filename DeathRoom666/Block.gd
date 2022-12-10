@@ -17,14 +17,17 @@ const DEFAULT_MAX_VELOCITY = 100
 # onready.
 # ---------------------------------------
 onready var _spike = $Spike
+onready var _spr = $Wall
 
 # ---------------------------------------
 # vars.
 # ---------------------------------------
 var _parent:CanvasLayer = null
+var _timer = 0.0
 var _velocity = Vector2()
 var _freezed = false
 var _max_velocity_y = DEFAULT_MAX_VELOCITY
+var _color = Common.eBlock.RED
 
 # ---------------------------------------
 # public functions.
@@ -34,7 +37,8 @@ func set_max_velocity_y(dy:float) -> void:
 	_max_velocity_y = dy
 
 ## 動きを止める.
-func freeze() -> bool:
+## @param is_player プレイヤーが踏みつけたかどうか.
+func freeze(is_player:bool=false) -> bool:
 	if _freezed:
 		return false # フリーズ済み.
 	
@@ -49,6 +53,12 @@ func freeze() -> bool:
 	# リングエフェクト出現.
 	Common.start_particle_ring(position, 1.0, Color.white)
 	
+	if is_player:
+		match _color:
+			Common.eBlock.YELLOW:
+				# バナナを追加
+				Common.add_item2()
+	
 	return true
 
 ## 親ノードを設定する.
@@ -59,9 +69,19 @@ func set_parent(layer:CanvasLayer) -> void:
 # private functions.
 # ---------------------------------------
 func _ready() -> void:
-	pass
+	var tbl = []
+	tbl.append(Common.eBlock.RED)
+	tbl.append(Common.eBlock.GREEN)
+	tbl.append(Common.eBlock.BLUE)
+	for i in range(3):
+		tbl.append(Common.eBlock.YELLOW)
+	
+	tbl.shuffle()
+	_color = tbl[0]
 
-func _physics_process(delta: float) -> void:
+func _physics_process(delta: float) -> void:	
+	_timer += delta
+	
 	# 重力を加算
 	_velocity.y += GRAVITY
 	_velocity.y = min(_velocity.y, _max_velocity_y)
@@ -69,11 +89,27 @@ func _physics_process(delta: float) -> void:
 	var collision:KinematicCollision2D = move_and_collide(_velocity * delta)
 	# 衝突処理
 	_hit(collision)
-
+	
+	# 色の更新.
+	var color = _get_color()
+	var rate = 0.2 * 0.8 * abs(sin(_timer * 4))
+	_spr.modulate = color.linear_interpolate(Color.white, rate)
+	
 func _hit(collision:KinematicCollision2D):
 	if collision:
 		# 着地したら消滅
 		freeze()
+
+func _get_color() -> Color:
+	match _color:
+		Common.eBlock.RED:
+			return Color.deeppink
+		Common.eBlock.YELLOW:
+			return Color.yellow
+		Common.eBlock.GREEN:
+			return Color.chartreuse
+		_: # Common.eBlock.BLUE:
+			return Color.dodgerblue
 
 # ---------------------------------------
 # signals.

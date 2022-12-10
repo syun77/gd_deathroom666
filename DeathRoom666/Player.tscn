@@ -38,6 +38,7 @@ margin_right = 40.0
 margin_bottom = -40.0
 
 [node name="Barrier" type="Area2D" parent="."]
+scale = Vector2( 1.2, 1.2 )
 collision_layer = 128
 collision_mask = 32
 

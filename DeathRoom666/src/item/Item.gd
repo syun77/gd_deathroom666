@@ -58,8 +58,9 @@ func _physics_process(delta: float) -> void:
 	# 移動する
 	_velocity.y += GRAVITY
 	_velocity *= 0.97
-	if _velocity.y > MAX_SPEED:
-		_velocity.y = MAX_SPEED
+	if _is_auto_collect == false:
+		if _velocity.y > MAX_SPEED:
+			_velocity.y = MAX_SPEED
 	position += _velocity * delta	
 
 	# 左右の壁にめり込まないようにする.

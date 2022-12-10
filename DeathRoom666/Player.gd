@@ -197,7 +197,7 @@ func _on_floor() -> void:
 		var collider:CollisionObject2D = col.collider
 		if collider.collision_layer & (1 << Common.eColLayer.BLOCK):
 			# Block(落下床)に衝突したので固定化させる.
-			if collider.freeze():
+			if collider.freeze(true):
 				# 弾を撃つ
 				_shoot(3)
 

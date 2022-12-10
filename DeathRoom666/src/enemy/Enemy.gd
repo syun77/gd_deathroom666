@@ -30,8 +30,8 @@ const PARAMS = {
 	1: {"spr": 0, "scale": 0.5, "hp": 5},
 	2: {"spr": 1, "scale": 0.5, "hp": 10},
 	3: {"spr": 2, "scale": 1.0, "hp": 20},
-	4: {"spr": 4, "scale": 1.0, "hp": 40},
-	5: {"spr": 3, "scale": 1.0, "hp": 80},
+	4: {"spr": 4, "scale": 1.0, "hp": 25},
+	5: {"spr": 3, "scale": 1.0, "hp": 30},
 }
 
 # --------------------------------
@@ -356,12 +356,12 @@ func _ai_2(aim:float) -> void:
 			for i in range(10):
 				for s in [-1, 1]:
 					var deg = 270 + 30 * s
-					var ax = -1.0 * s
+					var ax = -0.8 * s
 					var ay = 0
-					_bullet(deg, 300, i*0.1, ax, ay)
+					_bullet(deg, 250, i*0.1, ax, ay)
 		8, 11, 14:
 			for i in range(10):
-				_nway(3, aim, 5, ((_interval-8)*30)+200+(i*50), i * 0.1)
+				_nway(3, aim, 5, ((_interval-8)*50)+100+(i*50), i * 0.1)
 		17:
 			for i in range(5):
 				for j in [-1, 0, 1]:

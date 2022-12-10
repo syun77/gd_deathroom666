@@ -27,12 +27,21 @@ enum eColLayer {
 	SHOT = 6,
 }
 
+# 移動床の色.
+enum eBlock {
+	RED,
+	YELLOW,
+	BLUE,
+	GREEN,
+}
+
 #-----------------------------------
 # vars.
 #-----------------------------------
 var _hiscore = 0
 var _score = 0
 var _layers = []
+var _camera:Camera2D = null
 var _player:Player = null
 var _prev_target_pos = Vector2.ZERO # 前回のターゲットの座標.
 
@@ -56,11 +65,12 @@ func init() -> void:
 	_hiscore = 0
 	_score = 0
 	
-func setup(root, layers, player:Player) -> void:
+func setup(root, layers, player:Player, camera:Camera2D) -> void:
 	_score = 0
 	
 	_layers = layers
 	_player = player
+	_camera = camera
 	_snd = AudioStreamPlayer.new()
 	_snd.volume_db = -4
 	root.add_child(_snd)
@@ -132,6 +142,12 @@ func add_item(pos:Vector2, deg:float, speed:float) -> Item:
 	item.set_velocity(deg, speed)
 	get_layer("item").add_child(item)
 	return item
+	
+func add_item2() -> void:
+	var pos = Vector2()
+	pos.x = SCREEN_W/2 + rand_range(-128, 128)
+	pos.y = _camera.position.y - 420
+	add_item(pos, 0, 0)
 
 func add_ascii(pos:Vector2, s:String) -> void:
 	var p = AsciiObj.instance()
