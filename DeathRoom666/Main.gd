@@ -291,7 +291,11 @@ func _check_outside() -> void:
 	for block in _block_layer.get_children():
 		if block.position.y > outside_y:
 			# 画面外なので消す.
-			block.queue_free()
+			if _check_near_floor(block) == false:
+				# 近くに足場がない場合は足場にする
+				block.freeze()
+			else:
+				block.queue_free()
 	
 	for item in _item_layer.get_children():
 		if item.position.y > outside_y:
@@ -316,6 +320,34 @@ func _check_outside() -> void:
 	if _state == eState.MAIN:
 		if _player.position.y > outside_y:
 			_player.vanish()
+
+func _check_near_floor(block:Node2D) -> bool:
+	if not block is Block:
+		return true # Blockクラス以外は対象外.
+	
+	var px = block.position.x
+	var py = block.position.y
+	var size = Common.TILE_SIZE * 1.5
+	
+	var left_x = px - size
+	var right_x = px + size
+	var upper_y = py - size
+	var bottom_y = py + size
+	
+	for wall in _block_layer.get_children():
+		if not wall is Floor:
+			continue # Floor以外は対象外.
+		
+		var floor_x = wall.position.x
+		var floor_y = wall.position.y
+		if left_x < floor_x and floor_x < right_x:
+			if upper_y < floor_y and floor_y < bottom_y:
+				# 近くに足場がある
+				return true
+			
+	# 足場がない.
+	return false
+
 
 ## アイテムを出現させる.
 func add_item(pos:Vector2) -> void:
