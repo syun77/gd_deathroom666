@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Wall.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://assets/fonts/bmpfont.tres" type="Theme" id=5]
 [ext_resource path="res://assets/ui/bar_under.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/bar_progress.png" type="Texture" id=7]
+[ext_resource path="res://src/bg/BgEffect.tscn" type="PackedScene" id=8]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 4 )
@@ -15,6 +16,10 @@ script = ExtResource( 4 )
 position = Vector2( 240, 424 )
 current = true
 smoothing_enabled = true
+
+[node name="BgEffect" type="CanvasLayer" parent="."]
+
+[node name="BgEffect" parent="BgEffect" instance=ExtResource( 8 )]
 
 [node name="WallLayer" type="CanvasLayer" parent="."]
 follow_viewport_enable = true
@@ -195,23 +200,49 @@ theme = ExtResource( 5 )
 text = "012345"
 align = 2
 
+[node name="LabelHiScore" type="Label" parent="UILayer"]
+margin_left = 288.0
+margin_top = 824.0
+margin_right = 384.0
+margin_bottom = 848.0
+theme = ExtResource( 5 )
+text = "BEST:"
+
+[node name="LabelHiScore2" type="Label" parent="UILayer"]
+margin_left = 336.0
+margin_top = 824.0
+margin_right = 464.0
+margin_bottom = 848.0
+theme = ExtResource( 5 )
+text = "012345"
+align = 2
+
 [node name="Gameover" type="Node2D" parent="UILayer"]
 visible = false
 position = Vector2( 0, 360 )
 
 [node name="ColorRect" type="ColorRect" parent="UILayer/Gameover"]
+margin_top = -24.0
 margin_right = 480.0
-margin_bottom = 48.0
+margin_bottom = 80.0
 color = Color( 0, 0, 0, 0.309804 )
 
 [node name="LabelCaption" type="Label" parent="UILayer/Gameover"]
-margin_top = -8.0
+margin_top = -24.0
 margin_right = 480.0
-margin_bottom = 56.0
-theme = ExtResource( 3 )
+margin_bottom = 40.0
+theme = ExtResource( 5 )
 text = "GAME OVER"
 align = 1
 valign = 1
+
+[node name="LabelScore" type="Label" parent="UILayer/Gameover"]
+margin_top = 48.0
+margin_right = 480.0
+margin_bottom = 64.0
+theme = ExtResource( 5 )
+text = "SCORE:123456"
+align = 1
 
 [node name="ProgressBar" type="TextureProgress" parent="UILayer"]
 visible = false
@@ -234,3 +265,4 @@ theme = ExtResource( 3 )
 text = "RANK: 999"
 
 [node name="AudioBgm" type="AudioStreamPlayer" parent="."]
+bus = "BGM"

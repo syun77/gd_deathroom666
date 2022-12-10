@@ -32,6 +32,8 @@ func _ready() -> void:
 	pass
 
 func _process(delta: float) -> void:
+	delta *= Common.get_bullet_time_rate()
+
 	_velocity += _accel
 	position += _velocity * delta;
 	

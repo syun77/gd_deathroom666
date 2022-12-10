@@ -12,10 +12,10 @@ const EnemyObj = preload("res://src/enemy/Enemy.tscn")
 # 定数.
 # ------------------------------------------
 # デバッグフラグ.
-const _DEBUG = true
+const _DEBUG = false
 const _DEBUG_REVIVAL = false # 画面外に出ても自動復活するかどうか.
 const _DEBUG_ENEMY = false # 敵をすぐに出現させる.
-const _DEBUG_ENEMY_RANK = 5 # デバッグ時の初期敵ランク.
+const _DEBUG_ENEMY_RANK = 3 # デバッグ時の初期敵ランク.
 
 # カメラのスクロールオフセット.
 const SCROLL_OFFSET_Y = 100.0
@@ -58,8 +58,10 @@ onready var _bullet_layer = $BulletLayer
 onready var _effect_layer = $EffectLayerFront
 onready var _labelScore = $UILayer/LabelScore
 onready var _labelScore2 = $UILayer/LabelScore2
+onready var _labelHiScore2 = $UILayer/LabelHiScore2
 onready var _ui_gameover = $UILayer/Gameover
 onready var _ui_caption = $UILayer/Gameover/LabelCaption
+onready var _ui_result_score = $UILayer/Gameover/LabelScore
 onready var _healthBar = $UILayer/ProgressBar
 onready var _labelRank = $UILayer/LabelRank
 onready var _bgm = $AudioBgm
@@ -93,6 +95,7 @@ func _ready() -> void:
 	
 	# セットアップ.
 	var layers = {
+		"wall": _block_layer,
 		"item": _item_layer,
 		"enemy": _enemy_layer,
 		"shot": _shot_layer,
@@ -161,9 +164,12 @@ func _update_main(delta:float) -> void:
 	_check_block()
 	_update_enemy_hp()
 	
+	# スローアイテムの更新.
+	Common.update_slow_blocks(delta)
+	
 	# ランク数値の表示
 	if _enemy_rank == 0:
-		_labelRank.text = "Z / Space: ジャンプ\n空中でジャンプすると2段ジャンプ" # ランク0の場合はチュートリアルを表示する.
+		_labelRank.text = "Z / Space: JUMP\nDouble jump when jumping in the air." # ランク0の場合はチュートリアルを表示する.
 	else:
 		_labelRank.text = "RANK:%d/%d"%[_enemy_rank, MAX_RANK]
 	
@@ -191,6 +197,7 @@ func _update_hit_stop(delta:float) -> void:
 ## 更新 > ゲームオーバー.
 func _update_gameover(delta:float) -> void:
 	_ui_gameover.visible = true	
+	_ui_result_score.text = "SCORE:%d"%Common.get_score()
 	_camera.position = _camera_shake_position
 	
 	if Input.is_action_just_pressed("act_jump"):
@@ -201,6 +208,7 @@ func _update_gameover(delta:float) -> void:
 func _update_gameclear(delta:float) -> void:
 	_ui_gameover.visible = true
 	_ui_caption.text = "COMPLETED!!"
+	_ui_result_score.text = "SCORE:%d"%Common.get_score()
 	
 	_timer -= delta
 	if _timer > 0:
@@ -222,6 +230,7 @@ func _update_camera() -> void:
 		
 		# 横壁を作る.
 		if prev != next:
+			Common.add_score(1)
 			var next_y = next * Common.TILE_SIZE - 424 + 12
 			for x in [Common.TILE_HALF, 480.0 - Common.TILE_HALF]:
 				var wall = WallObj.instance()
@@ -254,7 +263,6 @@ func _check_block() -> void:
 	var next = int(_timer * interval)
 	if prev != next:
 		_appear_block()
-		Common.add_score(1)
 	_timer_prev = _timer
 	
 func _block_x(idx:int=-1) -> float:
@@ -358,16 +366,19 @@ func add_item(pos:Vector2) -> void:
 func _update_enemy_hp() -> void:
 	if is_instance_valid(_enemy) == false:
 		if _healthBar.visible:
+			var is_all_clear = _enemy_rank >= MAX_RANK
 			# 敵が死亡したのでカメラを揺らす.
 			_start_camera_shake(eCameraShake.VANISH_ENEMY)
 			# 敵弾をすべて消す.
 			for bullet in _bullet_layer.get_children():
-				add_item(bullet.position)
+				if is_all_clear == false:
+					add_item(bullet.position)
 				bullet.vanish()
 			# ブロックを足場に変化させる.
 			for block in _block_layer.get_children():
 				if block is Block:
-					add_item(block.position)
+					if is_all_clear == false:
+						add_item(block.position)
 					block.freeze()
 		_healthBar.visible = false # ゲージを消します
 		return
@@ -400,6 +411,9 @@ func _set_process_all_objects(b:bool) -> void:
 	for obj in _main_layer.get_children():
 		obj.set_process(b)
 		obj.set_physics_process(b)
+	for item in _item_layer.get_children():
+		item.set_process(b)
+		item.set_physics_process(b)
 	for wall in _block_layer.get_children():
 		wall.set_process(b)
 		wall.set_physics_process(b)
@@ -488,6 +502,13 @@ func _appear_enemy(next_y:float) -> void:
 
 ## 更新 > BGM
 func _update_bgm():
+	if Common.is_slow_blocks():
+		_bgm.pitch_scale = 0.75
+		AudioServer.set_bus_effect_enabled(1, 0, true) # ローパスフィルタを有効にする.
+	else:
+		AudioServer.set_bus_effect_enabled(1, 0, false) # ローパスフィルタを無効にする.
+		_bgm.pitch_scale = 1.0
+	
 	if _now_bgm != _next_bgm:
 		var _can_change = true
 		if _bgm.playing:
@@ -505,6 +526,7 @@ func _update_bgm():
 ## 更新 > UI
 func _update_ui():
 	_labelScore2.text = "%d"%Common.get_score()
+	_labelHiScore2.text = "%d"%Common.get_hiscore()
 
 # ------------------------------------------
 # debug functions.

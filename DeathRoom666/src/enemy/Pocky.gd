@@ -51,6 +51,7 @@ func _get_velocity() -> Vector2:
 
 ## 更新.
 func _process(delta: float) -> void:
+	delta *= Common.get_bullet_time_rate()
 	
 	position += _get_velocity() * delta
 	_timer += delta

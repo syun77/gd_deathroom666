@@ -87,6 +87,8 @@ func _process(delta: float) -> void:
 			_update_stop()	
 
 func _update_main(delta:float) -> void:
+	delta *= Common.get_bullet_time_rate()
+	
 	if _speed > MAX_SPEED:
 		# 最高速度を超えていたら減速する.
 		_speed -= 1 * delta

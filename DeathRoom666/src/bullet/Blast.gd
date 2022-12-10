@@ -23,6 +23,8 @@ var _timer = 0.0
 # ---------------------------------
 # public functions.
 # ---------------------------------
+func vanish() -> void:
+	queue_free()
 
 # ---------------------------------
 # private functions.
@@ -31,6 +33,8 @@ func _ready() -> void:
 	_snd.play()
 	
 func _process(delta: float) -> void:
+	delta *= Common.get_bullet_time_rate()
+
 	_timer += delta
 	var rate = back_out(1.0 - _timer / TIMER)
 	#var sc = sin(rate * PI) # 0(0度) -> 1(90度) -> 0 (180度)

@@ -59,7 +59,7 @@ onready var _spr_front_flip = $PlayerFrontFlip
 onready var _spr = $Player
 onready var _barrier = $Barrier
 onready var _audio_jump = $AudioJump
-onready var _auiod_beam = $AudioBeam
+onready var _audio_beam = $AudioBeam
 
 # ------------------------------------
 # メンバ変数.
@@ -98,7 +98,7 @@ func vanish() -> void:
 	set_process(false)
 	set_physics_process(false)
 	
-	Common.play_se("damage")
+	Common.play_se("damage", 2)
 
 ## 死亡リクエストがあるかどうか.
 func is_request_dead() -> bool:
@@ -345,7 +345,7 @@ func _shoot(cnt:int) -> void:
 		s.position = position
 		s.set_velocity(v)
 		parent.add_child(s)
-	_auiod_beam.play()
+	_audio_beam.play()
 
 ## バリアに何かが衝突.
 func _on_Barrier_area_entered(area: CollisionObject2D) -> void:

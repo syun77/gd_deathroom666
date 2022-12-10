@@ -58,6 +58,8 @@ func freeze(is_player:bool=false) -> bool:
 			Common.eBlock.YELLOW:
 				# バナナを追加
 				Common.add_item2()
+			_:
+				Common.add_super_item(_color)
 	
 	return true
 
@@ -70,16 +72,20 @@ func set_parent(layer:CanvasLayer) -> void:
 # ---------------------------------------
 func _ready() -> void:
 	var tbl = []
-	tbl.append(Common.eBlock.RED)
-	tbl.append(Common.eBlock.GREEN)
-	tbl.append(Common.eBlock.BLUE)
 	for i in range(3):
+		tbl.append(Common.eBlock.RED)
+		tbl.append(Common.eBlock.GREEN)
+	tbl.append(Common.eBlock.BLUE)
+	for i in range(5):
 		tbl.append(Common.eBlock.YELLOW)
 	
 	tbl.shuffle()
 	_color = tbl[0]
 
-func _physics_process(delta: float) -> void:	
+func _physics_process(delta: float) -> void:
+	
+	delta *= Common.get_bullet_time_rate()
+	
 	_timer += delta
 	
 	# 重力を加算

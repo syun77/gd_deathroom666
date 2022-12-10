@@ -40,6 +40,8 @@ func _ready() -> void:
 	_snd.play()
 
 func _process(delta: float) -> void:
+	delta *= Common.get_bullet_time_rate()
+
 	_timer += delta
 	var rate = _back_in(_timer/TIMER)
 	if rate > 1.0:

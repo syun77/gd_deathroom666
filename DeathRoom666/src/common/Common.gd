@@ -2,9 +2,10 @@ extends Node
 #-----------------------------------
 # preload.
 #-----------------------------------
-const ItemObj     = preload("res://src/item/Item.tscn")
-const ParticleObj = preload("res://src/effects/Particle.tscn")
-const AsciiObj    = preload("res://src/effects/ParticleAscii.tscn")
+const ItemObj      = preload("res://src/item/Item.tscn")
+const ItemSuperObj = preload("res://src/item/ItemSuper.tscn")
+const ParticleObj  = preload("res://src/effects/Particle.tscn")
+const AsciiObj     = preload("res://src/effects/ParticleAscii.tscn")
 
 #-----------------------------------
 # 定数.
@@ -15,6 +16,10 @@ const TILE_HALF := TILE_SIZE / 2.0 # タイルの半分のサイズ.
 
 # 画面の幅.
 const SCREEN_W:int = 480
+
+const TIMER_SLOW = 7.0
+
+const MAX_SOUND = 8
 
 # コリジョンレイヤー.
 enum eColLayer {
@@ -44,12 +49,14 @@ var _layers = []
 var _camera:Camera2D = null
 var _player:Player = null
 var _prev_target_pos = Vector2.ZERO # 前回のターゲットの座標.
+var _timer_slow = 0.0
 
-var _snd:AudioStreamPlayer
+var _snds = []
 var _snd_tbl = {
 	"damage": "res://assets/sound/damage.wav",
 	"explosion" : "res://assets/sound/explosion.wav",
 	"coin": "res://assets/sound/coin.wav",
+	"flash": "res://assets/sound/flash.wav",
 }
 
 #-----------------------------------
@@ -60,20 +67,56 @@ func get_score() -> int:
 	
 func add_score(v:int) -> void:
 	_score += v
+	
+	if _score > _hiscore:
+		# ハイスコア更新.
+		_hiscore = _score
+	
+func get_hiscore() -> int:
+	return _hiscore
 
 func init() -> void:
 	_hiscore = 0
 	_score = 0
+
+## 各種変数の初期化.
+func init_vars() -> void:
+	_score = 0
+	_timer_slow = 0.0
+	_snds.clear()
 	
 func setup(root, layers, player:Player, camera:Camera2D) -> void:
-	_score = 0
+	init_vars()
 	
 	_layers = layers
 	_player = player
 	_camera = camera
-	_snd = AudioStreamPlayer.new()
-	_snd.volume_db = -4
-	root.add_child(_snd)
+	for i in range(MAX_SOUND):
+		var snd = AudioStreamPlayer.new()
+		snd.volume_db = -4
+		root.add_child(snd)
+		_snds.append(snd)
+
+func is_slow_blocks() -> bool:
+	return _timer_slow > 0.0
+
+func update_slow_blocks(delta:float) -> void:
+	if _timer_slow > 0.0:
+		_timer_slow -= delta
+		
+func get_slow_blocks_rate() -> float:
+	if is_slow_blocks() == false:
+		return 0.0
+	
+	return _timer_slow / TIMER_SLOW
+	
+func get_bullet_time_rate() -> float:
+	if is_slow_blocks():
+		return 0.5
+	return 1.0
+
+func get_slow_blocks() -> float:
+	return _timer_slow
 	
 func get_player() -> Player:
 	if is_instance_valid(_player) == false:
@@ -149,18 +192,34 @@ func add_item2() -> void:
 	pos.y = _camera.position.y - 420
 	add_item(pos, 0, 0)
 
+func add_super_item(color:int) -> void:
+	var layer = get_layer("item")
+	for item in layer.get_children():
+		if item is ItemSuper:
+			if item.is_same_color(color):
+				return # 同じ色のアイテムが存在する場合は出現させない
+		
+	var item = ItemSuperObj.instance()
+	item.set_color(color)
+	layer.add_child(item)
+
 func add_ascii(pos:Vector2, s:String) -> void:
 	var p = AsciiObj.instance()
 	get_layer("effect").add_child(p)
 	p.init(pos, s)
 
-func play_se(name:String) -> void:
+func play_se(name:String, id:int=0) -> void:
+	if id < 0 or MAX_SOUND <= id:
+		push_error("不正なサウンドID %d"%id)
+		return
+	
 	if not name in _snd_tbl:
 		push_error("存在しないサウンド %s"%name)
 		return
 	
-	_snd.stream = load(_snd_tbl[name])
-	_snd.play()
+	var snd = _snds[id]
+	snd.stream = load(_snd_tbl[name])
+	snd.play()
 
 ## 角度差を求める.
 func diff_angle(now:float, next:float) -> float:
@@ -172,3 +231,24 @@ func diff_angle(now:float, next:float) -> float:
 	if d > 180.0:
 		d -= 360.0
 	return d
+
+func get_camera_rect() -> Rect2:
+	var rect = _camera.get_viewport_rect()
+	rect.position.y -= rect.get_center().y
+	rect.position.y += _camera.position.y
+
+	return rect
+
+func get_block_color(block_color:int) -> Color:
+	match block_color:
+		eBlock.RED:
+			return Color.deeppink
+		eBlock.YELLOW:
+			return Color.yellow
+		eBlock.GREEN:
+			return Color.chartreuse
+		_: # Common.eBlock.BLUE:
+			return Color.dodgerblue
+
+func start_slow_block() -> void:
+	_timer_slow = TIMER_SLOW

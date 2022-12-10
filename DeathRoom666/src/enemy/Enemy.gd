@@ -31,7 +31,7 @@ const PARAMS = {
 	2: {"spr": 1, "scale": 0.5, "hp": 10},
 	3: {"spr": 2, "scale": 1.0, "hp": 20},
 	4: {"spr": 4, "scale": 1.0, "hp": 25},
-	5: {"spr": 3, "scale": 1.0, "hp": 30},
+	5: {"spr": 3, "scale": 1.0, "hp": 3},
 }
 
 # --------------------------------
@@ -134,11 +134,13 @@ func damage(v:int) -> void:
 ## 消滅.
 func vanish() -> void:
 	Common.start_particle_enemy(position, 1, Color.white)
-	Common.play_se("explosion")
+	Common.play_se("explosion", 7)
 	
-	for i in range(8):
-		var deg = rand_range(30, 150)
-		Common.add_item(position, deg, 500)
+	if _id != 5:
+		# バナナボーナス
+		for i in range(4 + _id * 3):
+			var deg = rand_range(30, 150)
+			Common.add_item(position, deg, 500)
 	
 	queue_free()
 
