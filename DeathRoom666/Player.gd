@@ -80,6 +80,34 @@ var _jump_scale_timer = 0
 
 var _cnt_damage_anim = 0
 
+var _flr:Floor = null
+
+func set_on_floor(flr:Floor) -> void:
+	_flr = flr
+func _is_on_floor(delta:float) -> bool:
+	if is_instance_valid(_flr) == false:
+		return false # 衝突していない.
+		
+	var flr = _flr
+	_flr = null # 参照を消しておく.
+	
+	if _velocity.y < 0:
+		return false # 上昇中は判定しない.
+	
+	var py1 = position.y-10
+	var py2 = position.y
+	
+	var rect = flr.get_hit_rect()
+	var top = rect.position.y
+	var bottom = rect.position.y + rect.size.y
+	if bottom < py1:
+		return false
+	
+	var d = py2 - top 
+	move_and_slide(Vector2(0, (-d-0.9)/delta))
+	
+	return true # 衝突している
+
 # ------------------------------------
 # public function.
 # ------------------------------------
@@ -154,7 +182,7 @@ func _physics_process(delta: float) -> void:
 	# ※第2引数に床と判定する方向ベクトルを渡す必要がある
 	_velocity = move_and_slide(_velocity, Vector2.UP)
 	
-	if is_on_floor():
+	if is_on_floor() or _is_on_floor(delta):
 		# 床に着地しているときの処理.
 		_on_floor()
 	else:

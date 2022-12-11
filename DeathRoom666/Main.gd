@@ -28,6 +28,7 @@ const TIMER_SHAKE = 0.5 # カメラ揺れ時間.
 const TIMER_GAME_CLEAR = 1.0
 
 const MAX_RANK = 5
+const MAX_PENALTY_TIME = 10.0
 
 # 状態 .
 enum eState {
@@ -65,6 +66,7 @@ onready var _ui_result_score = $UILayer/Gameover/LabelScore
 onready var _healthBar = $UILayer/ProgressBar
 onready var _labelRank = $UILayer/LabelRank
 onready var _bgm = $AudioBgm
+onready var _penalty_bar = $UILayer/ProgressBar2
 
 # ------------------------------------------
 # vars.
@@ -83,6 +85,9 @@ var _camera_shake_timer = 0.0
 
 var _now_bgm:int = 0
 var _next_bgm:int = 0
+
+# 移動しないペナルティ
+var _dont_move_penalty:float = 0.0
 
 # ------------------------------------------
 # private functions.
@@ -160,6 +165,10 @@ func _update_main(delta:float) -> void:
 		return
 		
 	_timer += delta
+	_dont_move_penalty += delta * (0.2 + (0.05 * _enemy_rank))
+	if _dont_move_penalty > MAX_PENALTY_TIME:
+		_dont_move_penalty = MAX_PENALTY_TIME
+	_penalty_bar.value = _dont_move_penalty
 	_update_camera()	
 	_check_block()
 	_update_enemy_hp()
@@ -241,6 +250,9 @@ func _update_camera() -> void:
 			# ランダムで足場も作っておきます.
 			if randi()%3 == 0:
 				_random_floor(next_y)
+			
+			# ペナルティ軽減.
+			_dont_move_penalty *= 0.9
 
 			# 敵の出現チェック.			
 			_check_appear_enemy(next, next_y)
@@ -262,9 +274,14 @@ func _check_block() -> void:
 	var prev = int(_timer_prev * interval)
 	var next = int(_timer * interval)
 	if prev != next:
-		_appear_block()
+		var cnt = int(_dont_move_penalty * 0.5) + 1
+		for i in range(cnt):
+			_appear_block()
 	_timer_prev = _timer
-	
+
+func cube_out(t:float) -> float:
+	return 1 + (--t) * t * t
+
 func _block_x(idx:int=-1) -> float:
 	if idx < 0:
 		idx = randi()%8
@@ -278,7 +295,7 @@ func _appear_block() -> void:
 	block.set_parent(_block_layer)
 	_block_layer.add_child(block)
 	
-	# TODO: ランダムで速度を設定.
+	# ランダムで速度を設定.
 	match randi()%20:
 		0:
 			block.set_max_velocity_y(50)
@@ -337,8 +354,8 @@ func _check_near_floor(block:Node2D) -> bool:
 	var py = block.position.y
 	var size = Common.TILE_SIZE * 1.5
 	
-	var left_x = px - size
-	var right_x = px + size
+	var left_x = px - 1
+	var right_x = px + 1
 	var upper_y = py - size
 	var bottom_y = py + size
 	
