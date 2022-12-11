@@ -31,7 +31,7 @@ const PARAMS = {
 	2: {"spr": 1, "scale": 0.5, "hp": 10},
 	3: {"spr": 2, "scale": 1.0, "hp": 20},
 	4: {"spr": 4, "scale": 1.0, "hp": 25},
-	5: {"spr": 3, "scale": 1.0, "hp": 30},
+	5: {"spr": 3, "scale": 1.0, "hp": 40},
 }
 
 # --------------------------------
@@ -83,6 +83,7 @@ var _batteries = [] # 弾のディレイ発射用配列.
 var _cnt = 0 # 経過フレームカウンタ.
 var _interval = 0
 var _reticle:Reticle = null
+var _special_cnt = 0
 
 # --------------------------------
 # public functions.
@@ -123,6 +124,29 @@ func damage(v:int) -> void:
 	if _state != eState.MAIN:
 		# メイン状態でなければ何もしない.
 		return
+	
+	# 必殺技カウンター
+	if _id == 5:
+		var aim = Common.get_aim(position)
+		var rate = hpratio()
+		match _special_cnt:
+			0:
+				if rate < 0.75:
+					# 第一弾.
+					_nway(16, aim, 30, 250)
+					_special_cnt += 1
+			1:
+				if rate < 0.5:
+					# 第二弾.
+					for i in range(4):
+						_shoot_spike(aim + 90 * i, 100)
+					_special_cnt += 1
+			2:
+				if rate < 0.25:
+					# 最終奥義.
+					for i in range(3):
+						_nway(64, aim, 360, 100+50*i, 0.01*i)
+					_special_cnt += 1
 	
 	_audioHit.play()
 	_hp -= v
@@ -453,5 +477,9 @@ func _ai_5(aim:float) -> void:
 			if hpratio() < 0.5:
 				_shoot_spike(aim-60, 300)
 				_shoot_spike(aim+60, 300)
+				if hpratio() < 0.3:
+					# さらに発射
+					_shoot_spike(aim-70, 200)
+					_shoot_spike(aim+70, 200)
 		_:
 			pass
