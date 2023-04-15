@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 class_name Block
 # ---------------------------------------
@@ -16,8 +16,8 @@ const DEFAULT_MAX_VELOCITY = 100
 # ---------------------------------------
 # onready.
 # ---------------------------------------
-onready var _spike = $Spike
-onready var _spr = $Wall
+@onready var _spike = $Spike
+@onready var _spr = $Wall
 
 # ---------------------------------------
 # vars.
@@ -45,13 +45,13 @@ func freeze(is_player:bool=false) -> bool:
 	_freezed = true
 	# 固定ブロックにする
 	queue_free()
-	var wall = Wall.instance()
+	var wall = Wall.instantiate()
 	position.y -= 48.0 # 1タイルぶんずれる.
 	wall.position = position
 	_parent.add_child(wall)
 	
 	# リングエフェクト出現.
-	Common.start_particle_ring(position, 1.0, Color.white)
+	Common.start_particle_ring(position, 1.0, Color.WHITE)
 	
 	if is_player:
 		match _color:
@@ -99,23 +99,29 @@ func _physics_process(delta: float) -> void:
 	# 色の更新.
 	var color = _get_color()
 	var rate = 0.2 * 0.8 * abs(sin(_timer * 4))
-	_spr.modulate = color.linear_interpolate(Color.white, rate)
+	_spr.modulate = color.lerp(Color.WHITE, rate)
 	
 func _hit(collision:KinematicCollision2D):
 	if collision:
+		var collider = collision.get_collider()
+		
 		# 着地したら消滅
-		freeze()
+		var is_player = collider is Player
+		freeze(is_player)
+		if is_player:
+			# プレイヤーなら弾を撃つ.
+			collider.shoot()
 
 func _get_color() -> Color:
 	match _color:
 		Common.eBlock.RED:
-			return Color.deeppink
+			return Color.DEEP_PINK
 		Common.eBlock.YELLOW:
-			return Color.yellow
+			return Color.YELLOW
 		Common.eBlock.GREEN:
-			return Color.chartreuse
+			return Color.CHARTREUSE
 		_: # Common.eBlock.BLUE:
-			return Color.dodgerblue
+			return Color.DODGER_BLUE
 
 # ---------------------------------------
 # signals.

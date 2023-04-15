@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/beam.wav-0bf0671ee86e20b400cf25c5862ad796.sample"
+type="AudioStreamWAV"
+uid="uid://bs4o7rhixend1"
+path="res://.godot/imported/beam.wav-0bf0671ee86e20b400cf25c5862ad796.sample"
 
 [deps]
 
 source_file="res://assets/sound/beam.wav"
-dest_files=[ "res://.import/beam.wav-0bf0671ee86e20b400cf25c5862ad796.sample" ]
+dest_files=["res://.godot/imported/beam.wav-0bf0671ee86e20b400cf25c5862ad796.sample"]
 
 [params]
 

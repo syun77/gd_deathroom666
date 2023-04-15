@@ -15,7 +15,7 @@ enum eState {
 # -----------------------------------
 # onready.
 # -----------------------------------
-onready var _spr = $Sprite
+@onready var _spr = $Sprite2D
 
 # -----------------------------------
 # vars.
@@ -36,7 +36,7 @@ func set_appear_timer(t:float) -> void:
 	_appear_timer = t
 ## 弾を消す.
 func vanish() -> void:
-	Common.start_particle(position, 1.0, Color.red)
+	Common.start_particle(position, 1.0, Color.RED)
 	queue_free()
 
 # -----------------------------------
@@ -44,7 +44,7 @@ func vanish() -> void:
 # -----------------------------------
 func _get_velocity() -> Vector2:
 	var v = Vector2()
-	var rad = deg2rad(_deg)
+	var rad = deg_to_rad(_deg)
 	v.x = cos(rad) * _speed
 	v.y = -sin(rad) * _speed
 	return v

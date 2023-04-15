@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/damage.wav-1cfa6117c021b717b0a271916e414a9c.sample"
+type="AudioStreamWAV"
+uid="uid://c38ku0pdg1b0q"
+path="res://.godot/imported/damage.wav-1cfa6117c021b717b0a271916e414a9c.sample"
 
 [deps]
 
 source_file="res://assets/sound/damage.wav"
-dest_files=[ "res://.import/damage.wav-1cfa6117c021b717b0a271916e414a9c.sample" ]
+dest_files=["res://.godot/imported/damage.wav-1cfa6117c021b717b0a271916e414a9c.sample"]
 
 [params]
 

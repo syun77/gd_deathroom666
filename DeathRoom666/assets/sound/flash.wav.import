@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/flash.wav-5dff28c768f3b446cc3873558d73e635.sample"
+type="AudioStreamWAV"
+uid="uid://cl056gq0150an"
+path="res://.godot/imported/flash.wav-5dff28c768f3b446cc3873558d73e635.sample"
 
 [deps]
 
 source_file="res://assets/sound/flash.wav"
-dest_files=[ "res://.import/flash.wav-5dff28c768f3b446cc3873558d73e635.sample" ]
+dest_files=["res://.godot/imported/flash.wav-5dff28c768f3b446cc3873558d73e635.sample"]
 
 [params]
 

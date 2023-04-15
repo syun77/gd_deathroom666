@@ -130,7 +130,7 @@ func get_aim(pos:Vector2) -> float:
 		target = player.position
 	
 	var d = target - pos
-	var aim = rad2deg(atan2(-d.y, d.x))
+	var aim = rad_to_deg(atan2(-d.y, d.x))
 	
 	# ターゲットの座標を保存しておく.
 	_prev_target_pos = target
@@ -155,19 +155,19 @@ func get_layer(name:String) -> CanvasLayer:
 
 func add_particle() -> Particle:
 	var parent = get_layer("effect")
-	var p = ParticleObj.instance()
+	var p = ParticleObj.instantiate()
 	parent.add_child(p)
 	return p
 
 func start_particle(pos:Vector2, time:float, color:Color, sc:float=1.0) -> void:
-	var deg = rand_range(0, 360)
+	var deg = randf_range(0, 360)
 	for i in range(8):
 		var p = add_particle()
 		p.position = pos
-		var speed = rand_range(100, 1000)
-		var t = time + rand_range(-0.2, 0.2)
+		var speed = randf_range(100, 1000)
+		var t = time + randf_range(-0.2, 0.2)
 		p.start(t, deg, speed, 0, 10, color, sc)
-		deg += rand_range(30, 50)
+		deg += randf_range(30, 50)
 
 func start_particle_ring(pos:Vector2, time:float, color:Color, sc:float=2.0) -> void:
 	var p = add_particle()
@@ -180,7 +180,7 @@ func start_particle_enemy(pos:Vector2, time:float, color:Color) -> void:
 		start_particle_ring(pos, time + (i * 0.2), color, pow(2.0, (1 + i)))
 
 func add_item(pos:Vector2, deg:float, speed:float) -> Item:
-	var item = ItemObj.instance()
+	var item = ItemObj.instantiate()
 	item.position = pos
 	item.set_velocity(deg, speed)
 	get_layer("item").add_child(item)
@@ -188,7 +188,7 @@ func add_item(pos:Vector2, deg:float, speed:float) -> Item:
 	
 func add_item2() -> void:
 	var pos = Vector2()
-	pos.x = SCREEN_W/2 + rand_range(-128, 128)
+	pos.x = SCREEN_W/2 + randf_range(-128, 128)
 	pos.y = _camera.position.y - 420
 	add_item(pos, 0, 0)
 
@@ -199,12 +199,12 @@ func add_super_item(color:int) -> void:
 			if item.is_same_color(color):
 				return # 同じ色のアイテムが存在する場合は出現させない
 		
-	var item = ItemSuperObj.instance()
+	var item = ItemSuperObj.instantiate()
 	item.set_color(color)
 	layer.add_child(item)
 
 func add_ascii(pos:Vector2, s:String) -> void:
-	var p = AsciiObj.instance()
+	var p = AsciiObj.instantiate()
 	get_layer("effect").add_child(p)
 	p.init(pos, s)
 
@@ -242,13 +242,13 @@ func get_camera_rect() -> Rect2:
 func get_block_color(block_color:int) -> Color:
 	match block_color:
 		eBlock.RED:
-			return Color.deeppink
+			return Color.DEEP_PINK
 		eBlock.YELLOW:
-			return Color.yellow
+			return Color.YELLOW
 		eBlock.GREEN:
-			return Color.chartreuse
+			return Color.CHARTREUSE
 		_: # Common.eBlock.BLUE:
-			return Color.dodgerblue
+			return Color.DODGER_BLUE
 
 func start_slow_block() -> void:
 	_timer_slow = TIMER_SLOW

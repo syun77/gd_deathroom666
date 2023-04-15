@@ -10,7 +10,7 @@ extends Area2D
 # ------------------------------------
 # onready.
 # ------------------------------------
-onready var _line = $Line2D
+@onready var _line = $Line2D
 
 # ------------------------------------
 # vars.
@@ -27,20 +27,20 @@ var _timer := 0.0
 # ------------------------------------
 ## 速度を設定.
 func set_velocity(v:Vector2) -> void:
-	_deg = rad2deg(atan2(-v.y, v.x))
+	_deg = rad_to_deg(atan2(-v.y, v.x))
 	_speed = v.length()
 
 ## 速度をベクトルとして取得する.	
 func get_velocity() -> Vector2:
 	var v = Vector2()
-	var rad = deg2rad(_deg)
+	var rad = deg_to_rad(_deg)
 	v.x = cos(rad) * _speed
 	v.y = -sin(rad) * _speed
 	return v
 
 ## 消滅する
 func vanish() -> void:
-	Common.start_particle(position, 1.0, Color.aqua)
+	Common.start_particle(position, 1.0, Color.AQUA)
 	queue_free()
 
 # ------------------------------------
@@ -76,7 +76,7 @@ func _process(delta: float) -> void:
 		# 速度を更新.
 		var d = target.position - position
 		# 狙い撃ち角度を計算する.
-		var aim = rad2deg(atan2(-d.y, d.x))
+		var aim = rad_to_deg(atan2(-d.y, d.x))
 		var diff = Common.diff_angle(_deg, aim)
 		# 旋回する.
 		_deg += diff * delta * 3 + (diff * _timer * (delta+0.5))
@@ -104,7 +104,7 @@ func _update_line2d() -> void:
 		var a = _line.points[i]
 		var b = _line.points[i+1]
 		# 0.5の重みで線形補間します
-		_line.points[i+1] = b.linear_interpolate(a, 0.5)
+		_line.points[i+1] = b.lerp(a, 0.5)
 
 
 ## Area2Dと衝突した.

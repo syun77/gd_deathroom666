@@ -2,9 +2,9 @@ extends Area2D
 
 class_name ItemSuper
 
-onready var _spr = $Sprite
-onready var _spr_add = $Sprite2 # 加算合成用スプライト.
-onready var _snd = $AudioStreamPlayer
+@onready var _spr = $Sprite2D
+@onready var _spr_add = $Sprite2 # 加算合成用スプライト.
+@onready var _snd = $AudioStreamPlayer
 
 var _timer = 0.0
 var _color = Common.eBlock.RED
@@ -39,11 +39,11 @@ func _ready() -> void:
 	
 	var rect = Common.get_camera_rect()
 	var center = rect.get_center()
-	position.x = center.x + rand_range(-128.0, 128)
+	position.x = center.x + randf_range(-128.0, 128)
 	position.y = rect.position.y
 	
-	_velocity.x = rand_range(-100, 100)
-	_velocity.y = rand_range(50, 100)
+	_velocity.x = randf_range(-100, 100)
+	_velocity.y = randf_range(50, 100)
 
 func _process(delta: float) -> void:
 	_timer += delta
@@ -74,7 +74,7 @@ func _process(delta: float) -> void:
 		_velocity.y *= -1
 
 func add_banana(pos:Vector2) -> void:
-	var deg = rand_range(30, 150)
+	var deg = randf_range(30, 150)
 	Common.add_item(pos, deg, 500)
 
 func _on_ItemSuper_body_entered(body: Node) -> void:

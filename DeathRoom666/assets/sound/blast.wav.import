@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/blast.wav-b628a85d16e4828f4a5a39987adb7396.sample"
+type="AudioStreamWAV"
+uid="uid://diebuio8et1rt"
+path="res://.godot/imported/blast.wav-b628a85d16e4828f4a5a39987adb7396.sample"
 
 [deps]
 
 source_file="res://assets/sound/blast.wav"
-dest_files=[ "res://.import/blast.wav-b628a85d16e4828f4a5a39987adb7396.sample" ]
+dest_files=["res://.godot/imported/blast.wav-b628a85d16e4828f4a5a39987adb7396.sample"]
 
 [params]
 

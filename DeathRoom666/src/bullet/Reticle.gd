@@ -20,9 +20,9 @@ enum eState {
 # -----------------------------
 # onready.
 # -----------------------------
-onready var _spr = $Sprite
-onready var _label = $Label
-onready var _snd = $AudioStreamPlayer2D
+@onready var _spr = $Sprite2D
+@onready var _label = $Label
+@onready var _snd = $AudioStreamPlayer2D
 
 # -----------------------------
 # vars.
@@ -103,9 +103,9 @@ func _update_main(delta:float) -> void:
 	_timer += delta
 	var t = int(_timer * 20)	
 	if _is_hit and (t % 2 == 0):
-		_spr.modulate = Color.red
+		_spr.modulate = Color.RED
 	else:
-		_spr.modulate = Color.yellow
+		_spr.modulate = Color.YELLOW
 
 	# プレイヤーめがけて移動する.
 	var aim = Common.get_aim(position)
@@ -116,14 +116,14 @@ func _update_main(delta:float) -> void:
 	position += _get_vector() * delta
 	
 func _update_stop() -> void:
-	_spr.modulate = Color.red
+	_spr.modulate = Color.RED
 	if is_instance_valid(_bomber) == false:
 		# 爆弾が消えたら消えます.
 		vanish()
 
 func _get_vector() -> Vector2:
 	var v = Vector2()
-	var rad = deg2rad(_deg)
+	var rad = deg_to_rad(_deg)
 	v.x = cos(rad) * _speed
 	v.y = -sin(rad) * _speed
 	return v

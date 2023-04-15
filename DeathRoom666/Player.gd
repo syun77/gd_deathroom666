@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 class_name Player
 # ------------------------------------
@@ -48,18 +48,18 @@ enum eJumpScale {
 # export.
 # ------------------------------------
 # エフェクトレイヤー.
-export(NodePath) var _effect_layer
+@export var _effect_layer: NodePath
 var _effects:CanvasLayer = null
 
 # ------------------------------------
 # onready.
 # ------------------------------------
-onready var _spr_normal = $Player
-onready var _spr_front_flip = $PlayerFrontFlip
-onready var _spr = $Player
-onready var _barrier = $Barrier
-onready var _audio_jump = $AudioJump
-onready var _audio_beam = $AudioBeam
+@onready var _spr_normal = $Player
+@onready var _spr_front_flip = $PlayerFrontFlip
+@onready var _spr = $Player
+@onready var _barrier = $Barrier
+@onready var _audio_jump = $AudioJump
+@onready var _audio_beam = $AudioBeam
 
 # ------------------------------------
 # メンバ変数.
@@ -104,7 +104,8 @@ func _is_on_floor(delta:float) -> bool:
 		return false
 	
 	var d = py2 - top 
-	move_and_slide(Vector2(0, (-d-0.9)/delta))
+	set_velocity(Vector2(0, (-d-0.9)/delta))
+	move_and_slide()
 	
 	return true # 衝突している
 
@@ -140,6 +141,10 @@ func update_damage() -> void:
 	else:
 		_spr.frame = eSpr.DAMAGE2
 
+## 弾を撃つ:
+func shoot() -> void:
+	_shoot(3)
+
 # ------------------------------------
 # private function.
 # ------------------------------------
@@ -158,8 +163,8 @@ func _enable_barrier(b:bool) -> void:
 func _physics_process(delta: float) -> void:
 	if _request_dead:
 		# 死亡リクエストが届いた.
-		Common.start_particle(position, 1.0, Color.magenta)
-		Common.start_particle_ring(position, 1.0, Color.magenta, 4.0)
+		Common.start_particle(position, 1.0, Color.MAGENTA)
+		Common.start_particle_ring(position, 1.0, Color.MAGENTA, 4.0)
 		Common.play_se("explosion")
 		queue_free()
 		
@@ -180,7 +185,10 @@ func _physics_process(delta: float) -> void:
 	
 	# 移動処理.
 	# ※第2引数に床と判定する方向ベクトルを渡す必要がある
-	_velocity = move_and_slide(_velocity, Vector2.UP)
+	set_velocity(_velocity)
+	set_up_direction(Vector2.UP)
+	move_and_slide()
+	_velocity = velocity
 	
 	if is_on_floor() or _is_on_floor(delta):
 		# 床に着地しているときの処理.
@@ -220,10 +228,12 @@ func _on_floor() -> void:
 				
 	_velocity.y = 0 # 重力クリア.	
 	_cnt_jump = 0 # ジャンプ回数をリセットする.
-	for i in range(get_slide_count()):
+	for i in range(get_slide_collision_count()):
 		var col:KinematicCollision2D = get_slide_collision(i)
-		var collider:CollisionObject2D = col.collider
+		var collider:CollisionObject2D = col.get_collider()
 		if collider.collision_layer & (1 << Common.eColLayer.BLOCK):
+			# TODO: Godot4.xだとここで判定できなくなったっぽい.
+			#       仕方なく Block側の move_and_collide() で実装しました.
 			# Block(落下床)に衝突したので固定化させる.
 			if collider.freeze(true):
 				# 弾を撃つ
@@ -233,9 +243,9 @@ func _on_floor() -> void:
 func _check_collision():
 	
 	# 衝突対象を取得する.
-	for i in range(get_slide_count()):
+	for i in range(get_slide_collision_count()):
 		var col:KinematicCollision2D = get_slide_collision(i)
-		var collider:CollisionObject2D = col.collider
+		var collider:CollisionObject2D = col.get_collider()
 		if collider.collision_layer & (1 << Common.eColLayer.SPIKE):
 			# Spikeと衝突した.
 			vanish()
@@ -297,7 +307,7 @@ func _update_ghost_effect(delta:float) -> void:
 		if _effects == null:
 			_effects = get_node(_effect_layer)
 		if _effects != null:
-			var eft = GHOST_EFFECT.instance()
+			var eft = GHOST_EFFECT.instantiate()
 			_effects.add_child(eft)
 			var is_front_flip = _is_front_flip()
 			eft.start(position, _spr.scale, _spr.frame, _spr.flip_h, is_front_flip)
@@ -364,12 +374,12 @@ func _shoot(cnt:int) -> void:
 	var v := Vector2()
 	# ショットを発生させる.
 	for i in range(cnt):
-		var spd = rand_range(300, 800)
-		var rad = deg2rad(270 + rand_range(-50, 50))
+		var spd = randf_range(300, 800)
+		var rad = deg_to_rad(270 + randf_range(-50, 50))
 		v.x = cos(rad) * spd
 		v.y = -sin(rad) * spd
 		var parent = Common.get_layer("shot")
-		var s = SHOT_OBJ.instance()
+		var s = SHOT_OBJ.instantiate()
 		s.position = position
 		s.set_velocity(v)
 		parent.add_child(s)

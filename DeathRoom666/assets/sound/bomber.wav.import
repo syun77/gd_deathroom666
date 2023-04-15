@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/bomber.wav-feecd289d5fd804f1827799f10ff4422.sample"
+type="AudioStreamWAV"
+uid="uid://1rjqc3m144q8"
+path="res://.godot/imported/bomber.wav-feecd289d5fd804f1827799f10ff4422.sample"
 
 [deps]
 
 source_file="res://assets/sound/bomber.wav"
-dest_files=[ "res://.import/bomber.wav-feecd289d5fd804f1827799f10ff4422.sample" ]
+dest_files=["res://.godot/imported/bomber.wav-feecd289d5fd804f1827799f10ff4422.sample"]
 
 [params]
 

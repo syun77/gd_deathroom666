@@ -48,25 +48,25 @@ enum eCameraShake {
 # ------------------------------------------
 # onready
 # ------------------------------------------
-onready var _main_layer = $MainLayer
-onready var _block_layer = $WallLayer
-onready var _player = $MainLayer/Player
-onready var _camera = $MainCamera
-onready var _item_layer = $ItemLayer
-onready var _enemy_layer = $EnemyLayer
-onready var _shot_layer = $ShotLayer
-onready var _bullet_layer = $BulletLayer
-onready var _effect_layer = $EffectLayerFront
-onready var _labelScore = $UILayer/LabelScore
-onready var _labelScore2 = $UILayer/LabelScore2
-onready var _labelHiScore2 = $UILayer/LabelHiScore2
-onready var _ui_gameover = $UILayer/Gameover
-onready var _ui_caption = $UILayer/Gameover/LabelCaption
-onready var _ui_result_score = $UILayer/Gameover/LabelScore
-onready var _healthBar = $UILayer/ProgressBar
-onready var _labelRank = $UILayer/LabelRank
-onready var _bgm = $AudioBgm
-onready var _penalty_bar = $UILayer/ProgressBar2
+@onready var _main_layer = $MainLayer
+@onready var _block_layer = $WallLayer
+@onready var _player = $MainLayer/Player
+@onready var _camera = $MainCamera
+@onready var _item_layer = $ItemLayer
+@onready var _enemy_layer = $EnemyLayer
+@onready var _shot_layer = $ShotLayer
+@onready var _bullet_layer = $BulletLayer
+@onready var _effect_layer = $EffectLayerFront
+@onready var _labelScore = $UILayer/LabelScore
+@onready var _labelScore2 = $UILayer/LabelScore2
+@onready var _labelHiScore2 = $UILayer/LabelHiScore2
+@onready var _ui_gameover = $UILayer/Gameover
+@onready var _ui_caption = $UILayer/Gameover/LabelCaption
+@onready var _ui_result_score = $UILayer/Gameover/LabelScore
+@onready var _healthBar = $UILayer/ProgressBar
+@onready var _labelRank = $UILayer/LabelRank
+@onready var _bgm = $AudioBgm
+@onready var _penalty_bar = $UILayer/ProgressBar2
 
 # ------------------------------------------
 # vars.
@@ -119,7 +119,7 @@ func _create_random_floor():
 	for i in range(4):
 		var idx = randi()%(8-3)
 		for j in range(3):
-			var floor_obj = FloorObj.instance()
+			var floor_obj = FloorObj.instantiate()
 			floor_obj.position.x = _block_x(idx+j)
 			floor_obj.position.y = (1.5 + i * 4) * Common.TILE_SIZE
 			_block_layer.add_child(floor_obj)
@@ -211,7 +211,7 @@ func _update_gameover(delta:float) -> void:
 	
 	if Input.is_action_just_pressed("act_jump"):
 		# リスタート.
-		get_tree().change_scene("res://Main.tscn")
+		get_tree().change_scene_to_file("res://Main.tscn")
 
 ## 更新 > ゲームクリア.
 func _update_gameclear(delta:float) -> void:
@@ -225,7 +225,7 @@ func _update_gameclear(delta:float) -> void:
 	
 	if Input.is_action_just_pressed("act_jump"):
 		# リスタート.
-		get_tree().change_scene("res://Main.tscn")
+		get_tree().change_scene_to_file("res://Main.tscn")
 
 ## カメラの更新.
 func _update_camera() -> void:
@@ -242,7 +242,7 @@ func _update_camera() -> void:
 			Common.add_score(1)
 			var next_y = next * Common.TILE_SIZE - 424 + 12
 			for x in [Common.TILE_HALF, 480.0 - Common.TILE_HALF]:
-				var wall = WallObj.instance()
+				var wall = WallObj.instantiate()
 				wall.position.x = x
 				wall.position.y = next_y
 				_block_layer.add_child(wall)
@@ -263,7 +263,7 @@ func _update_camera() -> void:
 func _random_floor(next_y:float) -> void:
 	var idx = randi()%(8-5) + 1
 	for j in range(2):
-		var floor_obj = FloorObj.instance()
+		var floor_obj = FloorObj.instantiate()
 		floor_obj.position.x = _block_x(idx+j)
 		floor_obj.position.y = next_y
 		_block_layer.add_child(floor_obj)
@@ -289,7 +289,7 @@ func _block_x(idx:int=-1) -> float:
 
 ## ブロックの出現.
 func _appear_block() -> void:
-	var block = BlockObj.instance()
+	var block = BlockObj.instantiate()
 	block.position.x = _block_x()
 	block.position.y = _camera.position.y - 424
 	block.set_parent(_block_layer)
@@ -376,7 +376,7 @@ func _check_near_floor(block:Node2D) -> bool:
 
 ## アイテムを出現させる.
 func add_item(pos:Vector2) -> void:
-	var deg = rand_range(30, 150)
+	var deg = randf_range(30, 150)
 	Common.add_item(pos, deg, 500)
 
 ## 敵HPバーの更新.
@@ -422,7 +422,7 @@ func _start_camera_shake(type:int) -> void:
 	_camera_shake_timer = TIMER_SHAKE
 		
 	# スムージングを無効化.
-	_camera.smoothing_enabled = false
+	_camera.position_smoothing_enabled = false
 
 func _set_process_all_objects(b:bool) -> void:
 	for obj in _main_layer.get_children():
@@ -456,14 +456,14 @@ func _update_camera_shake(delta:float) -> void:
 			h = 16
 	
 	var rate = _camera_shake_timer / TIMER_SHAKE
-	var dx = rand_range(-w, w) * rate
-	var dy = rand_range(-h, h) * rate
+	var dx = randf_range(-w, w) * rate
+	var dy = randf_range(-h, h) * rate
 	_camera.position = _camera_shake_position + Vector2(dx, dy)
 	_camera_shake_timer -= delta
 	if _camera_shake_timer <= 0.0:
 		# 揺れ終了.
 		# スムージングを有効化.
-		_camera.smoothing_enabled = true
+		_camera.position_smoothing_enabled = true
 		_camera_shake_type = eCameraShake.DISABLE
 
 ## 敵の出現チェック.
@@ -507,7 +507,7 @@ func _init_enemy(enemy:Enemy) -> void:
 
 ## 敵の出現.
 func _appear_enemy(next_y:float) -> void:	
-	_enemy = EnemyObj.instance()
+	_enemy = EnemyObj.instantiate()
 	_enemy.position.x = Common.SCREEN_W/2
 	_enemy.position.y = next_y
 	# 初期化.
@@ -551,7 +551,7 @@ func _update_ui():
 
 func _update_debug() -> void:
 	if Input.is_action_just_pressed("ui_reset"):
-		get_tree().change_scene("res://Main.tscn")
+		get_tree().change_scene_to_file("res://Main.tscn")
 
 	#_labelScore.text = "Wall:%d Shot:%d Bullet:%d"%[_block_layer.get_child_count(), _shot_layer.get_child_count(), _bullet_layer.get_child_count()]
 	if _DEBUG_REVIVAL:

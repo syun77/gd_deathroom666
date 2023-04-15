@@ -2,11 +2,11 @@ extends Area2D
 
 class_name Floor
 
-onready var collision = $CollisionShape2D
+@onready var collision = $CollisionShape2D
 
 func get_hit_rect() -> Rect2:
 	var shape:RectangleShape2D = collision.shape
-	var size = shape.extents
+	var size = shape.size
 	var pos = position-size
 	size *= 2
 	var r = Rect2(pos, size)

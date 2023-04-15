@@ -12,7 +12,7 @@ const TIMER = 1.0
 # ---------------------------------
 # onready.
 # ---------------------------------
-onready var _snd = $AudioStreamPlayer2D
+@onready var _snd = $AudioStreamPlayer2D
 
 # ---------------------------------
 # vars.
@@ -51,7 +51,7 @@ func _process(delta: float) -> void:
 	if rate >= TIMER:
 		# 終了.
 		var bullets = Common.get_layer("bullet")
-		var blast = BlastObj.instance()
+		var blast = BlastObj.instantiate()
 		blast.position = position
 		bullets.add_child(blast)
 

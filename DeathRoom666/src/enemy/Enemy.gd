@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 class_name Enemy
 
@@ -41,9 +41,9 @@ const PARAMS = {
 # --------------------------------
 # onready.
 # --------------------------------
-onready var _spr = $Enemy
-onready var _audioHit = $AudioHit
-onready var _label = $Label
+@onready var _spr = $Enemy
+@onready var _audioHit = $AudioHit
+@onready var _label = $Label
 
 # --------------------------------
 # class.
@@ -157,13 +157,13 @@ func damage(v:int) -> void:
 		
 ## 消滅.
 func vanish() -> void:
-	Common.start_particle_enemy(position, 1, Color.white)
+	Common.start_particle_enemy(position, 1, Color.WHITE)
 	Common.play_se("explosion", 7)
 	
 	if _id != 5:
 		# バナナボーナス
 		for i in range(4 + _id * 3):
-			var deg = rand_range(30, 150)
+			var deg = randf_range(30, 150)
 			Common.add_item(position, deg, 500)
 	
 	queue_free()
@@ -196,7 +196,9 @@ func _update_main(delta:float) -> void:
 	_velocity.y = dy * 2
 	
 	# deltaは内部でやってくれる.
-	_velocity = move_and_slide(_velocity)
+	set_velocity(_velocity)
+	move_and_slide()
+	_velocity = velocity
 	
 	# 遅延発射リストの更新.
 	_update_batteies(delta)
@@ -207,11 +209,13 @@ func _update_dead() -> void:
 	_velocity *= MOVE_DECAY
 	
 	# deltaは内部でやってくれる.
-	_velocity = move_and_slide(_velocity)
+	set_velocity(_velocity)
+	move_and_slide()
+	_velocity = velocity
 	
 func _start_dead() -> void:
 	_state = eState.DEAD
-	_timer = TIMER_DEAD * rand_range(0.7, 1.5)
+	_timer = TIMER_DEAD * randf_range(0.7, 1.5)
 	if position.x < Common.SCREEN_W/2:
 		_velocity.x = 1000
 	else:
@@ -219,7 +223,7 @@ func _start_dead() -> void:
 	_velocity.y = -500
 
 func _set_velocity(deg:float, speed:float) -> void:
-	var rad = deg2rad(deg)
+	var rad = deg_to_rad(deg)
 	_velocity.x = cos(rad) * speed
 	_velocity.y = -sin(rad) * speed
 	
@@ -231,7 +235,7 @@ func _get_aim() -> float:
 		_target_last_position = pos
 	
 	var d = pos - position
-	return rad2deg(atan2(-d.y, d.x))
+	return rad_to_deg(atan2(-d.y, d.x))
 
 ## 狙い撃ち角度を取得する(yの反転なし).
 func _get_aim2() -> float:
@@ -241,7 +245,7 @@ func _get_aim2() -> float:
 		_target_last_position = pos
 	
 	var d = pos - position
-	return rad2deg(atan2(d.y, d.x))
+	return rad_to_deg(atan2(d.y, d.x))
 
 func _process(delta: float) -> void:
 	match _state:
@@ -250,7 +254,7 @@ func _process(delta: float) -> void:
 		eState.DEAD:
 			if _audioHit.playing == false:
 				_audioHit.play()
-			Common.start_particle(position, 0.5, Color.white)
+			Common.start_particle(position, 0.5, Color.WHITE)
 			_spr.rotation_degrees += 500 * delta
 			_timer -= delta
 			if _timer < 0:
@@ -287,7 +291,7 @@ func _bullet(deg:float, speed:float, delay:float=0, ax:float=0, ay:float=0) -> v
 		return
 	
 	# 発射する.
-	var b = BulletObj.instance()
+	var b = BulletObj.instantiate()
 	b.position = position
 	b.set_velocity(deg, speed)
 	b.set_accel(ax, ay)
@@ -331,14 +335,14 @@ func _update_batteies(delta:float) -> void:
 
 ## Spikeを発射する.
 func _shoot_spike(deg:float, power:float) -> void:
-	var spike = Spike2Obj.instance()
+	var spike = Spike2Obj.instantiate()
 	spike.position = position
 	spike.set_velocity(deg, power)
 	_bullets.add_child(spike)
 
 ## Pockeを発射する.
 func _shoot_pocky(deg:float, speed:float, delay:float) -> void:
-	var pocky = PockeyObj.instance()
+	var pocky = PockeyObj.instantiate()
 	pocky.position = position
 	pocky.set_velocity(deg, speed)
 	pocky.set_appear_timer(delay)
@@ -349,7 +353,7 @@ func _create_reticle() -> void:
 	if is_instance_valid(_reticle):
 		return # 生成済みの場合は何もしない.
 	
-	_reticle = ReticleObj.instance()
+	_reticle = ReticleObj.instantiate()
 	_reticle.position = position
 	_bullets.add_child(_reticle)
 
@@ -449,7 +453,7 @@ func _ai_5(aim:float) -> void:
 	if is_instance_valid(_reticle):
 		if _reticle.can_shoot():
 			# 爆弾発射.
-			var bomber = BomberObj.instance()
+			var bomber = BomberObj.instantiate()
 			bomber.set_pos(position, _reticle.position)
 			_reticle.start_bomber(bomber)
 			_bullets.add_child(bomber)

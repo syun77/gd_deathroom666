@@ -11,7 +11,7 @@ const MAX_SPEED := 100.0
 # --------------------------
 # onready.
 # --------------------------
-onready var _spr = $Sprite
+@onready var _spr = $Sprite2D
 
 # --------------------------
 # vars.
@@ -24,13 +24,13 @@ var _is_auto_collect = false # 自動回収フラグ
 # --------------------------
 ## 速度を設定する.
 func set_velocity(deg:float, speed:float) -> void:
-	var rad = deg2rad(deg)
+	var rad = deg_to_rad(deg)
 	_velocity.x = cos(rad) * speed
 	_velocity.y = -sin(rad) * speed
 
 ## 消滅
 func vanish() -> void:
-	Common.start_particle_ring(position, 1.0, Color.yellow)
+	Common.start_particle_ring(position, 1.0, Color.YELLOW)
 	Common.add_score(100)
 	Common.add_ascii(position, "100")
 	Common.play_se("coin")
@@ -39,7 +39,7 @@ func vanish() -> void:
 # private functions.
 # --------------------------
 func _ready() -> void:
-	_spr.rotation_degrees = rand_range(0, 360)
+	_spr.rotation_degrees = randf_range(0, 360)
 
 ## 速度を固定化したいので、_physics_process() で処理する.
 func _physics_process(delta: float) -> void:

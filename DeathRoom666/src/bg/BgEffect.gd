@@ -1,7 +1,7 @@
 extends Node2D
 
-onready var _bg = $ColorRect
-onready var _label = $Label
+@onready var _bg = $ColorRect
+@onready var _label = $Label
 
 func _ready() -> void:
 	_set_visible(false)

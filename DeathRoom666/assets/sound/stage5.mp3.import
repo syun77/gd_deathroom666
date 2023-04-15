@@ -2,14 +2,18 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/stage5.mp3-104b00d1cea0a191e496825bb84cb94d.mp3str"
+uid="uid://bgs8niu4pdscv"
+path="res://.godot/imported/stage5.mp3-104b00d1cea0a191e496825bb84cb94d.mp3str"
 
 [deps]
 
 source_file="res://assets/sound/stage5.mp3"
-dest_files=[ "res://.import/stage5.mp3-104b00d1cea0a191e496825bb84cb94d.mp3str" ]
+dest_files=["res://.godot/imported/stage5.mp3-104b00d1cea0a191e496825bb84cb94d.mp3str"]
 
 [params]
 
 loop=true
 loop_offset=6.5
+bpm=0
+beat_count=0
+bar_beats=4

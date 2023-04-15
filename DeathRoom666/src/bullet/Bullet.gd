@@ -1,6 +1,6 @@
 extends Area2D
 
-onready var _spr = $Bullet
+@onready var _spr = $Bullet
 
 # 移動速度.
 var _velocity = Vector2()
@@ -9,7 +9,7 @@ var _accel = Vector2()
 
 ## 移動量を設定する.
 func set_velocity(deg:float, speed:float) -> void:
-	var rad = deg2rad(deg)
+	var rad = deg_to_rad(deg)
 	_velocity.x = cos(rad) * speed
 	_velocity.y = -sin(rad) * speed
 	
@@ -23,7 +23,7 @@ func get_velocity() -> Vector2:
 
 ## 弾を消す.
 func vanish() -> void:
-	Common.start_particle(position, 1.0, Color.red)
+	Common.start_particle(position, 1.0, Color.RED)
 	
 	queue_free()
 

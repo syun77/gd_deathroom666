@@ -1,4 +1,4 @@
-extends Sprite
+extends Sprite2D
 
 class_name Particle
 
@@ -21,7 +21,7 @@ func expo_out(t:float) -> float:
 	
 func start(t:float, deg:float, speed:float, ax:float, ay:float, color:Color, sc:float) -> void:
 	_type = eType.NORMAL
-	var rad = deg2rad(deg)
+	var rad = deg_to_rad(deg)
 	_velocity.x = cos(rad) * speed
 	_velocity.y = -sin(rad) * speed
 	_accel.x = ax

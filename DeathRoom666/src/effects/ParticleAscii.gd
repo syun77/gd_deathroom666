@@ -2,7 +2,7 @@ extends Node2D
 
 const TIMER_VANISH = 1.0 # 1.0秒で消える.
 
-onready var _label = $Label
+@onready var _label = $Label
 
 var _velocity = Vector2(0, -50)
 var _timer = 0.0

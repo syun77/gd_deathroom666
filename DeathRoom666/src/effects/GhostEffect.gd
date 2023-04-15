@@ -2,7 +2,7 @@ extends Node2D
 
 var _timer:float
 
-onready var _spr = $Player
+@onready var _spr = $Player
 
 # ゴーストエフェクト開始
 func start(_position:Vector2, _scale:Vector2, _frame:int, _flip_h:bool, _is_front_flip):

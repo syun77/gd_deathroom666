@@ -13,7 +13,7 @@ const TIMER = 0.5 # 拡大・縮小時間.
 # ---------------------------------
 # onready.
 # ---------------------------------
-onready var _snd = $AudioStreamPlayer2D
+@onready var _snd = $AudioStreamPlayer2D
 
 # ---------------------------------
 # vars.

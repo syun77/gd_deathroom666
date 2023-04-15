@@ -1,286 +1,297 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=3 uid="uid://durh0fup8twg6"]
 
-[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Wall.tscn" type="PackedScene" id=2]
-[ext_resource path="res://assets/fonts/new_theme.tres" type="Theme" id=3]
-[ext_resource path="res://Main.gd" type="Script" id=4]
-[ext_resource path="res://assets/fonts/bmpfont.tres" type="Theme" id=5]
-[ext_resource path="res://assets/ui/bar_under.png" type="Texture" id=6]
-[ext_resource path="res://assets/ui/bar_progress.png" type="Texture" id=7]
-[ext_resource path="res://src/bg/BgEffect.tscn" type="PackedScene" id=8]
+[ext_resource type="PackedScene" uid="uid://cpf6s1y24xuqh" path="res://Player.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://cawfxde2iogna" path="res://Wall.tscn" id="2"]
+[ext_resource type="Theme" uid="uid://boe2fsb6hwq8e" path="res://assets/fonts/new_theme.tres" id="3"]
+[ext_resource type="Script" path="res://Main.gd" id="4"]
+[ext_resource type="Theme" path="res://assets/fonts/bmpfont.tres" id="5"]
+[ext_resource type="Texture2D" uid="uid://cmdp5whutiy06" path="res://assets/ui/bar_under.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cq1fswuekkjdk" path="res://assets/ui/bar_progress.png" id="7"]
+[ext_resource type="PackedScene" uid="uid://cyua8hvjqidhb" path="res://src/bg/BgEffect.tscn" id="8"]
+[ext_resource type="FontFile" uid="uid://b7oub6hmcrhev" path="res://assets/fonts/bmpfont.fnt" id="9_o0fep"]
 
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0, 0, 0, 1 )
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.635294, 0.266667, 0.294118, 1 )
+[sub_resource type="StyleBoxFlat" id="2"]
+bg_color = Color(0.635294, 0.266667, 0.294118, 1)
 
-[sub_resource type="Theme" id=3]
-ProgressBar/styles/bg = SubResource( 1 )
-ProgressBar/styles/fg = SubResource( 2 )
+[sub_resource type="Theme" id="3"]
+ProgressBar/styles/bg = SubResource("1")
+ProgressBar/styles/fg = SubResource("2")
 
 [node name="Main" type="Node2D"]
-script = ExtResource( 4 )
+script = ExtResource("4")
 
 [node name="MainCamera" type="Camera2D" parent="."]
-position = Vector2( 240, 424 )
-current = true
-smoothing_enabled = true
+position = Vector2(240, 424)
+position_smoothing_enabled = true
 
 [node name="BgEffect" type="CanvasLayer" parent="."]
 
-[node name="BgEffect" parent="BgEffect" instance=ExtResource( 8 )]
+[node name="BgEffect" parent="BgEffect" instance=ExtResource("8")]
 
 [node name="WallLayer" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
-[node name="Wall" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 832 )
+[node name="Wall" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 832)
 
-[node name="Wall2" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 72, 832 )
+[node name="Wall2" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(72, 832)
 
-[node name="Wall3" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 120, 832 )
+[node name="Wall3" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(120, 832)
 
-[node name="Wall4" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 168, 832 )
+[node name="Wall4" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(168, 832)
 
-[node name="Wall5" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 216, 832 )
+[node name="Wall5" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(216, 832)
 
-[node name="Wall6" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 264, 832 )
+[node name="Wall6" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(264, 832)
 
-[node name="Wall7" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 312, 832 )
+[node name="Wall7" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(312, 832)
 
-[node name="Wall8" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 360, 832 )
+[node name="Wall8" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(360, 832)
 
-[node name="Wall9" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 408, 832 )
+[node name="Wall9" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(408, 832)
 
-[node name="Wall10" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 832 )
+[node name="Wall10" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 832)
 
-[node name="Wall11" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 784 )
+[node name="Wall11" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 784)
 
-[node name="Wall12" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 736 )
+[node name="Wall12" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 736)
 
-[node name="Wall13" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 688 )
+[node name="Wall13" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 688)
 
-[node name="Wall14" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 640 )
+[node name="Wall14" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 640)
 
-[node name="Wall15" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 592 )
+[node name="Wall15" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 592)
 
-[node name="Wall16" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 544 )
+[node name="Wall16" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 544)
 
-[node name="Wall17" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 496 )
+[node name="Wall17" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 496)
 
-[node name="Wall18" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 448 )
+[node name="Wall18" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 448)
 
-[node name="Wall19" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 400 )
+[node name="Wall19" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 400)
 
-[node name="Wall20" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 352 )
+[node name="Wall20" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 352)
 
-[node name="Wall21" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 304 )
+[node name="Wall21" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 304)
 
-[node name="Wall22" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 784 )
+[node name="Wall22" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 784)
 
-[node name="Wall23" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 736 )
+[node name="Wall23" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 736)
 
-[node name="Wall24" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 688 )
+[node name="Wall24" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 688)
 
-[node name="Wall25" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 640 )
+[node name="Wall25" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 640)
 
-[node name="Wall26" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 592 )
+[node name="Wall26" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 592)
 
-[node name="Wall27" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 544 )
+[node name="Wall27" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 544)
 
-[node name="Wall28" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 496 )
+[node name="Wall28" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 496)
 
-[node name="Wall29" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 448 )
+[node name="Wall29" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 448)
 
-[node name="Wall30" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 400 )
+[node name="Wall30" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 400)
 
-[node name="Wall31" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 352 )
+[node name="Wall31" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 352)
 
-[node name="Wall32" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 304 )
+[node name="Wall32" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 304)
 
-[node name="Wall33" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 256 )
+[node name="Wall33" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 256)
 
-[node name="Wall34" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 208 )
+[node name="Wall34" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 208)
 
-[node name="Wall35" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 160 )
+[node name="Wall35" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 160)
 
-[node name="Wall36" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 112 )
+[node name="Wall36" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 112)
 
-[node name="Wall37" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 64 )
+[node name="Wall37" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 64)
 
-[node name="Wall38" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 24, 16 )
+[node name="Wall38" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(24, 16)
 
-[node name="Wall40" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 256 )
+[node name="Wall40" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 256)
 
-[node name="Wall41" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 208 )
+[node name="Wall41" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 208)
 
-[node name="Wall42" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 160 )
+[node name="Wall42" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 160)
 
-[node name="Wall43" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 112 )
+[node name="Wall43" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 112)
 
-[node name="Wall44" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 64 )
+[node name="Wall44" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 64)
 
-[node name="Wall45" parent="WallLayer" instance=ExtResource( 2 )]
-position = Vector2( 456, 16 )
+[node name="Wall45" parent="WallLayer" instance=ExtResource("2")]
+position = Vector2(456, 16)
 
 [node name="EffectLayerBack" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
 [node name="MainLayer" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
-[node name="Player" parent="MainLayer" instance=ExtResource( 1 )]
-position = Vector2( 136, 800 )
+[node name="Player" parent="MainLayer" instance=ExtResource("1")]
+position = Vector2(136, 800)
 _effect_layer = NodePath("../../EffectLayerBack")
 
 [node name="ItemLayer" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
 [node name="EnemyLayer" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
 [node name="ShotLayer" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
 [node name="BulletLayer" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
 [node name="EffectLayerFront" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
+follow_viewport_enabled = true
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="LabelScore" type="Label" parent="UILayer"]
-margin_left = 8.0
-margin_top = 824.0
-margin_right = 104.0
-margin_bottom = 848.0
-theme = ExtResource( 5 )
+offset_left = 8.0
+offset_top = 824.0
+offset_right = 104.0
+offset_bottom = 848.0
+theme = ExtResource("5")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 1
 text = "SCORE:"
 
 [node name="LabelScore2" type="Label" parent="UILayer"]
-margin_left = 72.0
-margin_top = 824.0
-margin_right = 200.0
-margin_bottom = 848.0
-theme = ExtResource( 5 )
+offset_left = 104.0
+offset_top = 824.0
+offset_right = 232.0
+offset_bottom = 853.0
+theme = ExtResource("5")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 1
 text = "012345"
-align = 2
 
 [node name="LabelHiScore" type="Label" parent="UILayer"]
-margin_left = 288.0
-margin_top = 824.0
-margin_right = 384.0
-margin_bottom = 848.0
-theme = ExtResource( 5 )
+offset_left = 288.0
+offset_top = 824.0
+offset_right = 384.0
+offset_bottom = 848.0
+theme = ExtResource("5")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 1
 text = "BEST:"
 
 [node name="LabelHiScore2" type="Label" parent="UILayer"]
-margin_left = 336.0
-margin_top = 824.0
-margin_right = 464.0
-margin_bottom = 848.0
-theme = ExtResource( 5 )
+offset_left = 368.0
+offset_top = 824.0
+offset_right = 496.0
+offset_bottom = 853.0
+theme = ExtResource("5")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 1
 text = "012345"
-align = 2
 
 [node name="Gameover" type="Node2D" parent="UILayer"]
 visible = false
-position = Vector2( 0, 360 )
+position = Vector2(0, 360)
 
 [node name="ColorRect" type="ColorRect" parent="UILayer/Gameover"]
-margin_top = -24.0
-margin_right = 480.0
-margin_bottom = 80.0
-color = Color( 0, 0, 0, 0.309804 )
+offset_top = -24.0
+offset_right = 480.0
+offset_bottom = 80.0
+color = Color(0, 0, 0, 0.309804)
 
 [node name="LabelCaption" type="Label" parent="UILayer/Gameover"]
-margin_top = -24.0
-margin_right = 480.0
-margin_bottom = 40.0
-theme = ExtResource( 5 )
+offset_top = -24.0
+offset_right = 480.0
+offset_bottom = 40.0
+theme = ExtResource("5")
 text = "GAME OVER"
-align = 1
-valign = 1
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="LabelScore" type="Label" parent="UILayer/Gameover"]
-margin_top = 48.0
-margin_right = 480.0
-margin_bottom = 64.0
-theme = ExtResource( 5 )
+offset_top = 48.0
+offset_right = 480.0
+offset_bottom = 64.0
+theme = ExtResource("5")
 text = "SCORE:123456"
-align = 1
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ProgressBar" type="TextureProgress" parent="UILayer"]
+[node name="ProgressBar" type="TextureProgressBar" parent="UILayer"]
 visible = false
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -208.0
-margin_top = 16.0
-margin_right = 208.0
-margin_bottom = 48.0
-theme = ExtResource( 3 )
+offset_left = -208.0
+offset_top = 16.0
+offset_right = 208.0
+offset_bottom = 48.0
+theme = ExtResource("3")
 value = 50.0
-texture_under = ExtResource( 6 )
-texture_progress = ExtResource( 7 )
+texture_under = ExtResource("6")
+texture_progress = ExtResource("7")
 
 [node name="LabelRank" type="Label" parent="UILayer"]
-margin_left = 8.0
-margin_right = 130.0
-margin_bottom = 34.0
-theme = ExtResource( 3 )
+offset_left = 8.0
+offset_right = 130.0
+offset_bottom = 34.0
+theme = ExtResource("3")
 text = "RANK: 999"
 
 [node name="ProgressBar2" type="ProgressBar" parent="UILayer"]
-margin_left = 368.0
-margin_right = 472.0
-margin_bottom = 14.0
-theme = SubResource( 3 )
+offset_left = 368.0
+offset_right = 472.0
+offset_bottom = 30.0
+theme = SubResource("3")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("9_o0fep")
 max_value = 10.0
 value = 9.0
 
 [node name="AudioBgm" type="AudioStreamPlayer" parent="."]
-bus = "BGM"
+bus = &"BGM"

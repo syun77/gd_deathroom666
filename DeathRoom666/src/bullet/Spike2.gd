@@ -2,20 +2,20 @@ extends Area2D
 
 class_name Spike2
 
-onready var _spr = $Sprite
+@onready var _spr = $Sprite2D
 
 var _timer:float = 0.0
 var _velocity = Vector2.ZERO
 
 ## 速度を設定する.
 func set_velocity(deg:float, power:float) -> void:
-	var rad = deg2rad(deg)
+	var rad = deg_to_rad(deg)
 	_velocity.x = cos(rad) * power
 	_velocity.y = -sin(rad) * power
 
 ## 消す.
 func vanish() -> void:
-	Common.start_particle(position, 1.0, Color.red)	
+	Common.start_particle(position, 1.0, Color.RED)	
 	queue_free()
 
 func _ready() -> void:
